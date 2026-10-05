@@ -165,10 +165,3 @@ The camera stops sending frames while it sits in its holster. URBs then waited f
 
 - **Project owner (Justin):** hardware, the build/sign/install/test loop on VMware and bare metal across about 160 builds, the USBPcap and API Monitor captures, IDA sessions and decompile exports, the spy and test tools, and the visual judgment calls that repeatedly caught false "it's fixed" conclusions.
 - **Claude (Anthropic):** driver code, reverse-engineering analysis of the decompiles, diagnostic build design, Python analysis tooling, and hypotheses. Several of those hypotheses were wrong along the way, and the lessons above reflect that.
-
----
-
-## Notes
-
-- `NET_USBIO.dll`, `netvcam.ax`, and the original x86 `net1120_usb.sys` are proprietary to their owners (NET GmbH / Thesycon). They are **not** included in this repository. This project only replaces the kernel driver, for interoperability on x64 Windows.
-- Future direction under discussion: a native **AVStream** minidriver that does field assembly in the kernel, so the camera works in DirectShow and Media Foundation without the vendor DLL or `.ax`.
