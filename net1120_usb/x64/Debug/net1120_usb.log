@@ -1,0 +1,29 @@
+﻿  Building 'net1120_usb' with toolset 'WindowsKernelModeDriver10.0' and the 'Desktop' target platform.
+  Stamping x64\Debug\net1120_usb.inf
+  Stamping [Version] section with DriverVer=05/10/2026,23.45.15.554
+  Copy 32-bit DLL and AX into driver package directory
+          1 file(s) copied.
+          1 file(s) copied.
+  net1120_usb.c
+  net1120_usb.vcxproj -> C:\Users\User\Desktop\net1120_usb\x64\Debug\net1120_usb.sys
+  Done Adding Additional Store
+  Successfully signed: C:\Users\User\Desktop\net1120_usb\x64\Debug\net1120_usb.sys
+  
+  ..........................
+  Signability test complete.
+  
+  Errors:
+  None
+  
+  Warnings:
+  None
+  
+  Catalog generation complete.
+  C:\Users\User\Desktop\net1120_usb\x64\Debug\net1120_usb\net1120_usb.cat
+  Set catalog attribute.
+  WdkVersion: 10.0.26100.0
+  Set catalog attribute.
+  WdkAssemblyVersion: 10.0.26100.6584
+  Done Adding Additional Store
+  Successfully signed: C:\Users\User\Desktop\net1120_usb\x64\Debug\net1120_usb\net1120_usb.cat
+  

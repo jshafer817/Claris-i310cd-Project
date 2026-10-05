@@ -1,0 +1,2232 @@
+================================================================================
+net1120_usb.sys — Thesycon USBIO v2.41 x86 kernel driver
+Decompiled by IDA Hex-Rays via analyze_net1120_sys.py
+IDB: C:\Users\Justin\Desktop\net1120_usb.sys.i64
+================================================================================
+
+============================================================
+=== DriverEntry ===
+============================================================
+// VA = 0x00015384
+NTSTATUS __stdcall DriverEntry(PDRIVER_OBJECT DriverObject, PUNICODE_STRING RegistryPath)
+{
+  PDRIVER_EXTENSION DriverExtension; // ecx
+
+  DriverObject->MajorFunction[4] = (PDRIVER_DISPATCH)sub_12E66;
+  DriverObject->MajorFunction[3] = (PDRIVER_DISPATCH)sub_12E66;
+  DriverExtension = DriverObject->DriverExtension;
+  DriverObject->MajorFunction[0] = (PDRIVER_DISPATCH)sub_128E8;
+  DriverObject->MajorFunction[18] = (PDRIVER_DISPATCH)sub_129E8;
+  DriverObject->MajorFunction[2] = (PDRIVER_DISPATCH)sub_12A6C;
+  DriverObject->MajorFunction[14] = (PDRIVER_DISPATCH)sub_122A4;
+  DriverObject->MajorFunction[23] = (PDRIVER_DISPATCH)sub_12B70;
+  DriverObject->MajorFunction[27] = (PDRIVER_DISPATCH)sub_15910;
+  DriverObject->MajorFunction[22] = (PDRIVER_DISPATCH)sub_16230;
+  DriverExtension->AddDevice = sub_144F2;
+  DriverObject->DriverUnload = (PDRIVER_UNLOAD)nullsub_1;
+  return 0;
+}
+
+
+============================================================
+=== IRP_MJ_DEVICE_CONTROL dispatch ===
+============================================================
+// Could not auto-locate dispatch function
+// Try: in IDA, navigate to the function containing 'cmp eax, 80942050h'
+// and note its start address, then add it to KNOWN_HANDLER_VAs above
+
+============================================================
+=== Handler: GET_CONFIGURATION_INFO ===
+// Known VA hint: 0x000125f6, function start: 0x000122a4
+============================================================
+NTSTATUS __stdcall sub_122A4(PRKMUTEX Mutex, PIRP Irp)
+{
+  NTSTATUS v2; // esi
+  struct _IO_STACK_LOCATION *CurrentStackLocation; // esi
+  int v4; // edx
+  unsigned int LowPart; // eax
+  struct _IRP *MasterIrp; // edi
+  PMDL MdlAddress; // ecx
+  int SecurityContext; // ebx
+  int v9; // eax
+  int v10; // eax
+  ULONG_PTR v11; // ebx
+  int v12; // eax
+  struct _KPROCESS *Blink; // esi
+  size_t Size; // [esp+8h] [ebp-8h]
+  int v16; // [esp+Ch] [ebp-4h] BYREF
+  struct _LIST_ENTRY *Mutexa; // [esp+18h] [ebp+8h]
+
+  Irp->IoStatus.Information = 0;
+  Mutexa = Mutex[1].Header.WaitListHead.Flink;
+  KeWaitForSingleObject(Mutexa, Executive, 0, 0, 0);
+  if ( !LOBYTE(Mutexa[71].Flink) )
+  {
+    v2 = -536866806;
+    goto LABEL_147;
+  }
+  CurrentStackLocation = Irp->Tail.Overlay.CurrentStackLocation;
+  v4 = *((_DWORD *)CurrentStackLocation->FileObject->FsContext + 3);
+  Size = CurrentStackLocation->Parameters.Create.Options;
+  LowPart = CurrentStackLocation->Parameters.Read.ByteOffset.LowPart;
+  MasterIrp = Irp->AssociatedIrp.MasterIrp;
+  if ( (LowPart & 3) == 0 )
+  {
+    SecurityContext = (int)CurrentStackLocation->Parameters.Create.SecurityContext;
+    MdlAddress = 0;
+    goto LABEL_10;
+  }
+  if ( (CurrentStackLocation->Parameters.Read.ByteOffset.LowPart & 3) == 3 )
+  {
+    MdlAddress = 0;
+    goto LABEL_8;
+  }
+  MdlAddress = Irp->MdlAddress;
+  if ( !MdlAddress )
+  {
+LABEL_8:
+    v16 = 0;
+    goto LABEL_11;
+  }
+  SecurityContext = MdlAddress->ByteCount;
+LABEL_10:
+  v16 = SecurityContext;
+LABEL_11:
+  if ( LowPart > 0x8094205C )
+  {
+    if ( LowPart <= 0x80942084 )
+    {
+      if ( LowPart == -2137775996 )
+      {
+        if ( !v4 )
+          goto LABEL_103;
+        if ( !BYTE1(Mutexa[71].Flink) )
+          sub_13E20((int)Mutexa, Irp, v4);
+        sub_14C80(Mutexa, CurrentStackLocation->FileObject);
+      }
+      else
+      {
+        if ( LowPart <= 0x80942070 )
+        {
+          switch ( LowPart )
+          {
+            case 0x80942070:
+              v9 = sub_11F78((int)Mutexa, Irp);
+              goto LABEL_24;
+            case 0x80942060:
+              v11 = 4;
+              if ( (unsigned int)v16 < 4 )
+                goto LABEL_29;
+              v12 = sub_11E0E(Mutexa, MasterIrp);
+              break;
+            case 0x80942064:
+              v11 = 16;
+              if ( (unsigned int)v16 < 0x10 )
+                goto LABEL_29;
+              v12 = sub_1213E(Mutexa, MasterIrp);
+              break;
+            case 0x80942068:
+              v11 = 16;
+              if ( (unsigned int)v16 < 0x10 )
+                goto LABEL_29;
+              v12 = sub_120EE(Mutexa, MasterIrp);
+              break;
+            case 0x8094206C:
+              v11 = 12;
+              if ( (unsigned int)v16 < 0xC )
+                goto LABEL_29;
+              v12 = sub_120C0(MasterIrp);
+              break;
+            default:
+              goto LABEL_139;
+          }
+          goto LABEL_37;
+        }
+        if ( LowPart == -2137776008 )
+        {
+          if ( !Size )
+            goto LABEL_22;
+          v9 = sub_14078(Mutexa, Irp, MasterIrp);
+          goto LABEL_24;
+        }
+        if ( LowPart != -2137776004 )
+        {
+          if ( LowPart != -2137776000 )
+            goto LABEL_139;
+          if ( v4 )
+          {
+            v9 = sub_13DD8((int)Mutexa, Irp, v4);
+            goto LABEL_24;
+          }
+          goto LABEL_103;
+        }
+        if ( !v4 )
+          goto LABEL_103;
+        sub_140DE(v4);
+      }
+      v2 = 0;
+      goto LABEL_147;
+    }
+    if ( LowPart > 0x809420A2 )
+    {
+      if ( LowPart != -2137775963 )
+      {
+        if ( LowPart == -2137775928 )
+        {
+          v9 = sub_1220A(Mutexa);
+          goto LABEL_24;
+        }
+        if ( LowPart == -2137775924 )
+        {
+          v9 = sub_1225C(Mutexa);
+          goto LABEL_24;
+        }
+        goto LABEL_139;
+      }
+      if ( v4 )
+      {
+        if ( Size < 0xC )
+          goto LABEL_22;
+        v10 = sub_13FEA(0, (int)Mutexa, Irp, v4, (int)MasterIrp, (int)&v16, (int)MdlAddress);
+        goto LABEL_145;
+      }
+    }
+    else
+    {
+      switch ( LowPart )
+      {
+        case 0x809420A2:
+          if ( v4 )
+          {
+            if ( Size < 0xC )
+              goto LABEL_22;
+            v10 = sub_13FEA(1, (int)Mutexa, Irp, v4, (int)MasterIrp, (int)&v16, (int)MdlAddress);
+            goto LABEL_145;
+          }
+          break;
+        case 0x8094208C:
+          if ( v4 )
+          {
+            v11 = 4;
+            if ( (unsigned int)v16 < 4 )
+              goto LABEL_29;
+            v12 = sub_13E84(v4, MasterIrp);
+            goto LABEL_37;
+          }
+          break;
+        case 0x80942090:
+          if ( v4 )
+          {
+            if ( Size < 4 )
+              goto LABEL_22;
+            v9 = sub_13EAA(v4, MasterIrp);
+            goto LABEL_24;
+          }
+          break;
+        case 0x80942094:
+          if ( v4 )
+          {
+            if ( Size < 0xC )
+              goto LABEL_22;
+            v9 = sub_13ECA((KIRQL)Mutexa, v4, (int)MasterIrp);
+            goto LABEL_24;
+          }
+          break;
+        case 0x80942098:
+          if ( v4 )
+          {
+            if ( Size < 4 )
+              goto LABEL_22;
+            v11 = 32;
+            if ( (unsigned int)v16 < 0x20 )
+              goto LABEL_29;
+            v12 = sub_13F30((int)Mutexa, v4, (KIRQL)MasterIrp, (int)MasterIrp);
+            goto LABEL_37;
+          }
+          break;
+        default:
+          goto LABEL_139;
+      }
+    }
+LABEL_103:
+    v2 = -536866807;
+    goto LABEL_147;
+  }
+  if ( LowPart == -2137776036 )
+  {
+    if ( Size < 4 )
+      goto LABEL_22;
+    v9 = sub_11DCC((PRKMUTEX)Mutexa, (int)MasterIrp);
+    goto LABEL_24;
+  }
+  if ( LowPart > 0x80942028 )
+  {
+    if ( LowPart > 0x80942040 )
+    {
+      switch ( LowPart )
+      {
+        case 0x80942050:
+          v11 = 776;
+          if ( (unsigned int)v16 < 0x308 )
+            goto LABEL_29;
+          v12 = sub_11E60(Mutexa, MasterIrp);
+          break;
+        case 0x80942054:
+          v9 = sub_11F1E((int)Mutexa, Irp);
+          goto LABEL_24;
+        case 0x80942058:
+          v11 = 4;
+          if ( (unsigned int)v16 < 4 )
+            goto LABEL_29;
+          v12 = sub_11CF8((int)Mutexa, Irp, (int)MasterIrp);
+          break;
+        default:
+          goto LABEL_139;
+      }
+      goto LABEL_37;
+    }
+    switch ( LowPart )
+    {
+      case 0x80942040:
+        if ( Size < 8 )
+          goto LABEL_22;
+        v9 = sub_12276(Mutexa, (int)MasterIrp);
+        goto LABEL_24;
+      case 0x8094202C:
+        if ( Size < 8 )
+          goto LABEL_22;
+        v9 = sub_1184E((int)Mutexa, Irp, (int)MasterIrp);
+        goto LABEL_24;
+      case 0x80942032:
+        if ( Size < 0x12 )
+          goto LABEL_22;
+        v10 = sub_11BF8(1, (int)Mutexa, Irp, (int)MasterIrp, (int)&v16, (int)MdlAddress);
+        break;
+      case 0x80942035:
+        if ( Size < 0x12 )
+          goto LABEL_22;
+        v10 = sub_11BF8(0, (int)Mutexa, Irp, (int)MasterIrp, (int)&v16, (int)MdlAddress);
+        break;
+      case 0x8094203C:
+        v11 = 8;
+        if ( (unsigned int)v16 < 8 )
+          goto LABEL_29;
+        v12 = sub_11D5C(Mutexa, MasterIrp);
+        goto LABEL_37;
+      default:
+        goto LABEL_139;
+    }
+LABEL_145:
+    v2 = v10;
+    if ( !v10 )
+      Irp->IoStatus.Information = v16;
+    goto LABEL_147;
+  }
+  if ( LowPart == -2137776088 )
+  {
+    if ( LOBYTE(Mutexa[70].Blink) )
+    {
+      Blink = (struct _KPROCESS *)Mutexa[32].Blink;
+      if ( Blink != IoGetCurrentProcess() )
+      {
+        if ( Blink )
+        {
+          v2 = -536866785;
+          goto LABEL_147;
+        }
+      }
+    }
+    v9 = sub_114B2((int)Mutexa, Irp, 1);
+    goto LABEL_24;
+  }
+  if ( LowPart > 0x80942014 )
+  {
+    switch ( LowPart )
+    {
+      case 0x80942018:
+        v11 = 1;
+        if ( !v16 )
+          goto LABEL_29;
+        v12 = sub_11B58((int)Mutexa, Irp, (int)MasterIrp);
+        break;
+      case 0x8094201C:
+        if ( Size < 2 )
+          goto LABEL_22;
+        v11 = 1;
+        if ( !v16 )
+        {
+LABEL_29:
+          v2 = -536866814;
+          goto LABEL_147;
+        }
+        v12 = sub_11BA4((int)Mutexa, Irp, (int)MasterIrp);
+        break;
+      case 0x80942020:
+        v9 = sub_11562((int)Mutexa, MasterIrp, Size);
+        goto LABEL_24;
+      case 0x80942024:
+        if ( Size < 0x104 )
+          goto LABEL_22;
+        v9 = sub_11604(Mutexa, Irp, (int)MasterIrp);
+        goto LABEL_24;
+      default:
+        goto LABEL_139;
+    }
+  }
+  else
+  {
+    if ( LowPart != -2137776108 )
+    {
+      switch ( LowPart )
+      {
+        case 0x80942006:
+          if ( Size < 8 )
+            goto LABEL_22;
+          if ( !v16 )
+            goto LABEL_29;
+          v10 = sub_1193E(1, (int)Mutexa, Irp, (int)MasterIrp, (int)&v16, MdlAddress);
+          break;
+        case 0x80942009:
+          if ( Size < 8 )
+            goto LABEL_22;
+          if ( !v16 )
+            goto LABEL_29;
+          v10 = sub_1193E(0, (int)Mutexa, Irp, (int)MasterIrp, (int)&v16, MdlAddress);
+          break;
+        case 0x8094200C:
+          if ( Size < 8 )
+            goto LABEL_22;
+          v9 = sub_11A20(1, (int)Mutexa, Irp, (int)MasterIrp);
+          goto LABEL_24;
+        case 0x80942010:
+          if ( Size < 8 )
+          {
+LABEL_22:
+            v2 = -536866815;
+            goto LABEL_147;
+          }
+          v9 = sub_11A20(0, (int)Mutexa, Irp, (int)MasterIrp);
+LABEL_24:
+          v2 = v9;
+          goto LABEL_147;
+        default:
+LABEL_139:
+          v2 = -536866801;
+          goto LABEL_147;
+      }
+      goto LABEL_145;
+    }
+    if ( Size < 6 )
+      goto LABEL_22;
+    v11 = 2;
+    if ( (unsigned int)v16 < 2 )
+      goto LABEL_29;
+    v12 = sub_11AD4((int)Mutexa, Irp, (int)MasterIrp);
+  }
+LABEL_37:
+  v2 = v12;
+  if ( !v12 )
+    Irp->IoStatus.Information = v11;
+LABEL_147:
+  KeReleaseMutex((PRKMUTEX)Mutexa, 0);
+  Irp->IoStatus.Status = v2;
+  IofCompleteRequest(Irp, 0);
+  return v2;
+}
+
+
+// --- callee: sub_11A20 @ 0x00011a20 ---
+int __stdcall sub_11A20(char a1, int a2, PIRP Irp, int *a4)
+{
+  int v4; // eax
+  int v5; // eax
+  int v6; // eax
+  int v7; // eax
+  int v8; // eax
+  int v10[24]; // [esp+4h] [ebp-60h] BYREF
+
+  memset(v10, 0, sizeof(v10));
+  HIWORD(v10[18]) = *((_WORD *)a4 + 2);
+  v4 = *a4;
+  LOWORD(v10[19]) = *((_WORD *)a4 + 3);
+  LOWORD(v10[0]) = 80;
+  if ( !a1 )
+  {
+    if ( !v4 )
+    {
+      HIWORD(v10[0]) = 16;
+      return sub_14A62(a2, Irp, (int)v10, *(PLARGE_INTEGER *)(a2 + 508));
+    }
+    v7 = v4 - 1;
+    if ( !v7 )
+    {
+      HIWORD(v10[0]) = 17;
+      return sub_14A62(a2, Irp, (int)v10, *(PLARGE_INTEGER *)(a2 + 508));
+    }
+    v8 = v7 - 1;
+    if ( !v8 )
+    {
+      HIWORD(v10[0]) = 18;
+      return sub_14A62(a2, Irp, (int)v10, *(PLARGE_INTEGER *)(a2 + 508));
+    }
+    if ( v8 == 1 )
+    {
+      HIWORD(v10[0]) = 34;
+      return sub_14A62(a2, Irp, (int)v10, *(PLARGE_INTEGER *)(a2 + 508));
+    }
+    return -536866803;
+  }
+  if ( !v4 )
+  {
+    HIWORD(v10[0]) = 13;
+    return sub_14A62(a2, Irp, (int)v10, *(PLARGE_INTEGER *)(a2 + 508));
+  }
+  v5 = v4 - 1;
+  if ( !v5 )
+  {
+    HIWORD(v10[0]) = 14;
+    return sub_14A62(a2, Irp, (int)v10, *(PLARGE_INTEGER *)(a2 + 508));
+  }
+  v6 = v5 - 1;
+  if ( !v6 )
+  {
+    HIWORD(v10[0]) = 15;
+    return sub_14A62(a2, Irp, (int)v10, *(PLARGE_INTEGER *)(a2 + 508));
+  }
+  if ( v6 != 1 )
+    return -536866803;
+  HIWORD(v10[0]) = 35;
+  return sub_14A62(a2, Irp, (int)v10, *(PLARGE_INTEGER *)(a2 + 508));
+}
+
+
+// --- callee: sub_14A62 @ 0x00014a62 ---
+int __stdcall sub_14A62(int a1, PIRP Irp, int a3, PLARGE_INTEGER Timeout)
+{
+  int result; // eax
+  int v5; // eax
+
+  *(_DWORD *)(a3 + 4) = -1;
+  if ( *(_BYTE *)(a1 + 569) )
+    return -536866793;
+  result = sub_14988(a1, Irp, a3, 2228227, Timeout);
+  if ( result == -1073741811 )
+  {
+    v5 = *(_DWORD *)(a3 + 4);
+    if ( v5 != -1 && v5 )
+      return sub_14946();
+    return -536866792;
+  }
+  else if ( result != -536866804 && *(_DWORD *)(a3 + 4) != -1 )
+  {
+    return sub_14946();
+  }
+  return result;
+}
+
+
+// --- callee: sub_1193E @ 0x0001193e ---
+int __stdcall sub_1193E(char a1, int a2, PIRP Irp, int *a4, int *a5, PMDL MemoryDescriptorList)
+{
+  bool v6; // zf
+  PVOID MappedSystemVa; // eax
+  int result; // eax
+  int v9; // esi
+  int v10; // esi
+  int v11; // esi
+  int v12[24]; // [esp+Ch] [ebp-60h] BYREF
+
+  memset(v12, 0, sizeof(v12));
+  HIBYTE(v12[18]) = *((_BYTE *)a4 + 4);
+  BYTE2(v12[18]) = *((_BYTE *)a4 + 5);
+  LOWORD(v12[19]) = *((_WORD *)a4 + 3);
+  v12[6] = *a5;
+  v6 = (MemoryDescriptorList->MdlFlags & 5) == 0;
+  LOWORD(v12[0]) = 80;
+  if ( v6 )
+    MappedSystemVa = MmMapLockedPagesSpecifyCache(MemoryDescriptorList, 0, MmCached, 0, 0, 0x10u);
+  else
+    MappedSystemVa = MemoryDescriptorList->MappedSystemVa;
+  v12[7] = (int)MappedSystemVa;
+  if ( !MappedSystemVa )
+    return -536866795;
+  v9 = *a4;
+  if ( a1 )
+  {
+    if ( v9 )
+    {
+      v10 = v9 - 1;
+      if ( v10 )
+      {
+        if ( v10 == 1 )
+        {
+          HIWORD(v12[0]) = 36;
+          goto LABEL_20;
+        }
+        return -536866803;
+      }
+      HIWORD(v12[0]) = 40;
+    }
+    else
+    {
+      HIWORD(v12[0]) = 11;
+    }
+  }
+  else if ( v9 )
+  {
+    v11 = v9 - 1;
+    if ( v11 )
+    {
+      if ( v11 != 1 )
+        return -536866803;
+      HIWORD(v12[0]) = 37;
+    }
+    else
+    {
+      HIWORD(v12[0]) = 41;
+    }
+  }
+  else
+  {
+    HIWORD(v12[0]) = 12;
+  }
+LABEL_20:
+  result = sub_14A62(a2, Irp, (int)v12, *(PLARGE_INTEGER *)(a2 + 508));
+  if ( !result )
+    *a5 = v12[6];
+  return result;
+}
+
+
+// --- callee: sub_11AD4 @ 0x00011ad4 ---
+int __stdcall sub_11AD4(int a1, PIRP Irp, int *a3)
+{
+  __int16 v3; // cx
+  int v4; // eax
+  bool v5; // zf
+  int v6; // eax
+  int v7; // eax
+  int v9[24]; // [esp+4h] [ebp-60h] BYREF
+
+  memset(v9, 0, sizeof(v9));
+  v3 = *((_WORD *)a3 + 2);
+  v9[7] = (int)a3;
+  v4 = *a3;
+  v5 = *a3 == 0;
+  LOWORD(v9[0]) = 80;
+  LOWORD(v9[19]) = v3;
+  v9[6] = 2;
+  if ( v5 )
+  {
+    HIWORD(v9[0]) = 19;
+  }
+  else
+  {
+    v6 = v4 - 1;
+    if ( v6 )
+    {
+      v7 = v6 - 1;
+      if ( v7 )
+      {
+        if ( v7 != 1 )
+          return -536866803;
+        HIWORD(v9[0]) = 33;
+      }
+      else
+      {
+        HIWORD(v9[0]) = 21;
+      }
+    }
+    else
+    {
+      HIWORD(v9[0]) = 20;
+    }
+  }
+  return sub_14A62(a1, Irp, (int)v9, *(PLARGE_INTEGER *)(a1 + 508));
+}
+
+
+// --- callee: sub_11604 @ 0x00011604 ---
+int __stdcall sub_11604(PVOID Context, PIRP Irp, _WORD *a3)
+{
+  unsigned __int16 v3; // si
+  int v4; // eax
+  _DWORD *v5; // esi
+  int v6; // edi
+  int v7; // eax
+  int v8; // edi
+  unsigned int v9; // ebx
+  struct _USB_CONFIGURATION_DESCRIPTOR *v10; // esi
+  struct _USBD_INTERFACE_LIST_ENTRY *v11; // edi
+  int v12; // edi
+  int v13; // ebx
+  PUSB_INTERFACE_DESCRIPTOR v14; // eax
+  unsigned int v15; // edx
+  PUSBD_INTERFACE_INFORMATION *p_Interface; // edi
+  PUSBD_INTERFACE_INFORMATION v17; // eax
+  ULONG NumberOfPipes; // esi
+  ULONG v19; // ecx
+  ULONG *p_MaximumTransferSize; // eax
+  PVOID v21; // eax
+  char v24[260]; // [esp+Ch] [ebp-110h] BYREF
+  int v25; // [esp+110h] [ebp-Ch] BYREF
+  PVOID P; // [esp+114h] [ebp-8h]
+  PUSBD_INTERFACE_LIST_ENTRY InterfaceList; // [esp+118h] [ebp-4h]
+  PUSBD_INTERFACE_INFORMATION *Contexta; // [esp+124h] [ebp+8h]
+  unsigned int v29; // [esp+12Ch] [ebp+10h]
+  unsigned int v30; // [esp+12Ch] [ebp+10h]
+
+  v3 = a3[1];
+  InterfaceList = 0;
+  P = 0;
+  if ( !v3 || v3 > 0x20u )
+  {
+    v8 = -536866792;
+    goto LABEL_36;
+  }
+  memset(v24, 0, sizeof(v24));
+  *(_WORD *)v24 = *a3;
+  v4 = v3;
+  v5 = a3 + 2;
+  v6 = v4;
+  do
+  {
+    if ( !sub_115DA(*(unsigned __int16 *)v5) )
+    {
+      v7 = *(unsigned __int16 *)&v24[2];
+      *(_DWORD *)&v24[8 * *(unsigned __int16 *)&v24[2] + 4] = *v5;
+      *(_DWORD *)&v24[8 * v7 + 8] = v5[1];
+      ++*(_WORD *)&v24[2];
+    }
+    v5 += 2;
+    --v6;
+  }
+  while ( v6 );
+  if ( !*(_WORD *)&v24[2] )
+    return -536866811;
+  if ( *((_DWORD *)Context + 100) || (v8 = sub_12018((int)Context, Irp, v24[0], (int)&v25, (int)Context + 400)) == 0 )
+  {
+    v9 = *(unsigned __int16 *)&v24[2];
+    v10 = (struct _USB_CONFIGURATION_DESCRIPTOR *)*((_DWORD *)Context + 100);
+    v29 = *(unsigned __int16 *)&v24[2];
+    v25 = 8 * *(unsigned __int16 *)&v24[2] + 8;
+    v11 = (struct _USBD_INTERFACE_LIST_ENTRY *)sub_15556(v25, 0x36304955u);
+    InterfaceList = v11;
+    if ( !v11 )
+      goto LABEL_19;
+    memset(v11, 0, v25);
+    v12 = 0;
+    if ( v9 )
+    {
+      v13 = (char *)InterfaceList - &v24[4];
+      while ( 1 )
+      {
+        v14 = USBD_ParseConfigurationDescriptorEx(
+                v10,
+                v10,
+                *(unsigned __int16 *)&v24[8 * v12 + 4],
+                *(unsigned __int16 *)&v24[8 * v12 + 6],
+                -1,
+                -1,
+                -1);
+        *(_DWORD *)&v24[8 * v12 + 4 + v13] = v14;
+        if ( !v14 )
+          break;
+        if ( ++v12 >= v29 )
+        {
+          v9 = v29;
+          goto LABEL_18;
+        }
+      }
+      v8 = -536866794;
+      goto LABEL_36;
+    }
+LABEL_18:
+    P = USBD_CreateConfigurationRequestEx(v10, InterfaceList);
+    if ( P )
+    {
+      v15 = 0;
+      if ( v9 )
+      {
+        p_Interface = &InterfaceList->Interface;
+        do
+        {
+          v17 = *p_Interface;
+          if ( *p_Interface )
+          {
+            NumberOfPipes = v17->NumberOfPipes;
+            if ( NumberOfPipes )
+            {
+              v19 = *(_DWORD *)&v24[8 * v15 + 8];
+              p_MaximumTransferSize = &v17->Pipes[0].MaximumTransferSize;
+              do
+              {
+                *p_MaximumTransferSize = v19;
+                p_MaximumTransferSize += 5;
+                --NumberOfPipes;
+              }
+              while ( NumberOfPipes );
+            }
+          }
+          ++v15;
+          p_Interface += 2;
+        }
+        while ( v15 < v9 );
+      }
+      v21 = P;
+      *((_DWORD *)P + 1) = -1;
+      v8 = sub_14A62((int)Context, Irp, (int)v21, *((PLARGE_INTEGER *)Context + 127));
+      if ( !v8 )
+      {
+        v30 = 0;
+        if ( v9 )
+        {
+          Contexta = &InterfaceList->Interface;
+          while ( 1 )
+          {
+            if ( *Contexta )
+            {
+              v8 = sub_11380((int)Context, Irp, *((_DWORD *)P + 5));
+              if ( v8 )
+                break;
+            }
+            ++v30;
+            Contexta += 2;
+            if ( v30 >= v9 )
+              goto LABEL_34;
+          }
+        }
+        else
+        {
+LABEL_34:
+          *((_DWORD *)Context + 65) = IoGetCurrentProcess();
+          *((_BYTE *)Context + 570) = 1;
+          sub_11D84(Context);
+        }
+      }
+    }
+    else
+    {
+LABEL_19:
+      v8 = -536866813;
+    }
+LABEL_36:
+    if ( InterfaceList )
+      sub_15572(InterfaceList);
+    if ( P )
+      ExFreePool(P);
+  }
+  return v8;
+}
+
+
+// --- callee: sub_115DA @ 0x000115da ---
+int **__thiscall sub_115DA(int ***this, int a2)
+{
+  int ***v2; // ecx
+  int **result; // eax
+
+  v2 = this + 98;
+  for ( result = *v2; result != (int **)v2; result = (int **)*result )
+  {
+    if ( *((unsigned __int8 *)result + 14) == a2 )
+      return result;
+  }
+  return 0;
+}
+
+
+// --- callee: sub_12018 @ 0x00012018 ---
+int __stdcall sub_12018(int a1, PIRP Irp, char a3, unsigned int *a4, int *a5)
+{
+  unsigned int v5; // edi
+  int v6; // eax
+  int v7; // esi
+  int v8; // ebx
+  int v10; // [esp+Ch] [ebp-8h] BYREF
+  int v11; // [esp+10h] [ebp-4h]
+
+  v11 = 0;
+  v5 = 9;
+  while ( 1 )
+  {
+    v6 = sub_15556(v5, 0x38304955u);
+    v7 = v6;
+    if ( !v6 )
+    {
+      v8 = -536866813;
+LABEL_7:
+      *a4 = 0;
+      *a5 = 0;
+      return v8;
+    }
+    v10 = v5;
+    v8 = sub_11FB6(a1, Irp, a3, (int)&v10, v6);
+    if ( v8 )
+    {
+      sub_15572(v7);
+      goto LABEL_7;
+    }
+    if ( v10 != v5 )
+    {
+      sub_15572(v7);
+      v8 = -536866816;
+      goto LABEL_7;
+    }
+    if ( *(unsigned __int16 *)(v7 + 2) <= v5 )
+      break;
+    v5 = *(unsigned __int16 *)(v7 + 2);
+    sub_15572(v7);
+    ++v11;
+    v8 = -536866816;
+    if ( v11 >= 2 )
+      goto LABEL_7;
+  }
+  *a4 = v5;
+  *a5 = v7;
+  return v8;
+}
+
+
+// --- callee: sub_15556 @ 0x00015556 ---
+PVOID __stdcall sub_15556(SIZE_T NumberOfBytes, ULONG Tag)
+{
+  return ExAllocatePoolWithTag(NonPagedPool, NumberOfBytes, Tag);
+}
+
+
+// --- callee: sub_11380 @ 0x00011380 ---
+int __userpurge sub_11380@<eax>(_DWORD *a1@<eax>, int a2, PIRP Irp, int a4)
+{
+  _DWORD *v5; // edx
+  int v7; // esi
+  int v8; // eax
+  volatile LONG *v9; // ebx
+  volatile LONG *v10; // eax
+  volatile LONG v11; // ecx
+  int v12; // edi
+  unsigned int v13; // [esp+4h] [ebp-Ch]
+  _DWORD *v14; // [esp+8h] [ebp-8h]
+  unsigned int v15; // [esp+Ch] [ebp-4h]
+  _DWORD *v16; // [esp+20h] [ebp+10h]
+
+  v5 = sub_15556(0x30u, 0x33304955u);
+  v14 = v5;
+  if ( !v5 )
+    return -536866813;
+  memset(v5, 0, 0x30u);
+  v15 = 0;
+  v5[3] = *a1;
+  v5[4] = a1[1];
+  v5[5] = a1[2];
+  v5[6] = a1[3];
+  v7 = a2;
+  v5[2] = a4;
+  v8 = *(_DWORD *)(a2 + 396);
+  *v5 = *(_DWORD *)v8;
+  v5[1] = v8;
+  *(_DWORD *)(*(_DWORD *)v8 + 4) = v5;
+  *(_DWORD *)v8 = v5;
+  v13 = a1[3];
+  if ( !v13 )
+    return 0;
+  v16 = a1 + 4;
+  while ( 1 )
+  {
+    if ( !v16[2] )
+    {
+      v12 = -536866787;
+      goto LABEL_15;
+    }
+    v9 = (volatile LONG *)sub_15556(0x58u, 0x34304955u);
+    if ( !v9 )
+      break;
+    memset((void *)v9, 0, 0x58u);
+    sub_11006(v9 + 14);
+    *((_BYTE *)v9 + 84) = *(_BYTE *)(v7 + 562);
+    qmemcpy((void *)(v9 + 5), v16, 0x14u);
+    if ( *((_DWORD *)v9 + 6) > 3u )
+      *((_DWORD *)v9 + 6) = 1;
+    *((_DWORD *)v9 + 4) = v14;
+    InterlockedIncrement(v9 + 2);
+    v10 = *(volatile LONG **)(a2 + 388);
+    v11 = *v10;
+    ++v15;
+    v16 += 5;
+    *((_DWORD *)v9 + 1) = v10;
+    *v9 = v11;
+    *(_DWORD *)(*v10 + 4) = v9;
+    *v10 = (volatile LONG)v9;
+    if ( v15 >= v13 )
+      return 0;
+    v7 = a2;
+    v5 = v14;
+  }
+  v5 = v14;
+  v12 = -536866813;
+LABEL_15:
+  sub_1129A(v7, Irp, (int)v5);
+  return v12;
+}
+
+
+// --- callee: sub_11D84 @ 0x00011d84 ---
+int __stdcall sub_11D84(_BYTE *Context)
+{
+  bool v1; // zf
+  int v2; // ecx
+
+  v1 = Context[570] == 0;
+  Context[573] = 0;
+  if ( !v1 )
+  {
+    v2 = *((_DWORD *)Context + 100);
+    if ( v2 )
+    {
+      if ( (*(_BYTE *)(v2 + 7) & 0x20) != 0 && (Context[512] & 4) != 0 )
+        Context[573] = 1;
+    }
+  }
+  return sub_15D90(Context);
+}
+
+
+// --- callee: sub_15572 @ 0x00015572 ---
+void __stdcall sub_15572(void *a1)
+{
+  ExFreePool(a1);
+}
+
+
+// --- callee: sub_11562 @ 0x00011562 ---
+int __stdcall sub_11562(int a1, unsigned __int16 *Src, size_t Size)
+{
+  PVOID v4; // eax
+  int v5; // [esp+4h] [ebp-4h]
+
+  v5 = 0;
+  if ( Size < 9 )
+    return -536866815;
+  if ( Size < Src[1] )
+    return -536866815;
+  if ( *(_DWORD *)(a1 + 400) )
+    sub_15572(*(void **)(a1 + 400));
+  v4 = sub_15556(Size, 0x35304955u);
+  *(_DWORD *)(a1 + 400) = v4;
+  if ( !v4 )
+    return -536866813;
+  memmove(v4, Src, Size);
+  return v5;
+}
+
+
+// --- callee: sub_11BA4 @ 0x00011ba4 ---
+int __stdcall sub_11BA4(int a1, PIRP Irp, __int16 *a3)
+{
+  __int16 v3; // cx
+  union _LARGE_INTEGER *v5; // [esp-4h] [ebp-68h]
+  int v6[24]; // [esp+4h] [ebp-60h] BYREF
+
+  memset(v6, 0, sizeof(v6));
+  v3 = *a3;
+  v6[7] = (int)a3;
+  v5 = *(union _LARGE_INTEGER **)(a1 + 508);
+  LOWORD(v6[19]) = v3;
+  v6[0] = 2555984;
+  v6[6] = 1;
+  return sub_14A62(a1, Irp, (int)v6, v5);
+}
+
+
+// --- callee: sub_11B58 @ 0x00011b58 ---
+int __stdcall sub_11B58(int a1, PIRP Irp, int a3)
+{
+  union _LARGE_INTEGER *v4; // [esp-4h] [ebp-68h]
+  int v5[24]; // [esp+4h] [ebp-60h] BYREF
+
+  memset(v5, 0, sizeof(v5));
+  v5[7] = a3;
+  v4 = *(union _LARGE_INTEGER **)(a1 + 508);
+  v5[0] = 2490448;
+  v5[6] = 1;
+  return sub_14A62(a1, Irp, (int)v5, v4);
+}
+
+
+// --- callee: sub_114B2 @ 0x000114b2 ---
+int __stdcall sub_114B2(int a1, PIRP Irp, char a3)
+{
+  _DWORD *v3; // edi
+  _DWORD *v4; // eax
+  IRP *v5; // eax
+  int result; // eax
+  union _LARGE_INTEGER *v7; // [esp-4h] [ebp-74h]
+  int v8[24]; // [esp+Ch] [ebp-64h] BYREF
+  int v9; // [esp+6Ch] [ebp-4h]
+
+  v9 = 0;
+  v3 = *(_DWORD **)(a1 + 384);
+  while ( v3 != (_DWORD *)(a1 + 384) )
+  {
+    v4 = v3;
+    v3 = (_DWORD *)*v3;
+    sub_140DE(v4);
+  }
+  sub_1121C(a1, Irp);
+  if ( a3 )
+  {
+    v7 = *(union _LARGE_INTEGER **)(a1 + 508);
+    memset(v8, 0, sizeof(v8));
+    v8[0] = 60;
+    v9 = sub_14A62(a1, Irp, (int)v8, v7);
+  }
+  sub_11320(a1);
+  if ( *(_DWORD *)(a1 + 400) )
+  {
+    sub_15572(*(void **)(a1 + 400));
+    *(_DWORD *)(a1 + 400) = 0;
+  }
+  v5 = *(IRP **)(a1 + 148);
+  *(_BYTE *)(a1 + 570) = 0;
+  if ( v5 )
+  {
+    IoCancelIrp(v5);
+    *(_DWORD *)(a1 + 148) = 0;
+  }
+  result = v9;
+  *(_DWORD *)(a1 + 260) = 0;
+  return result;
+}
+
+
+// --- callee: sub_140DE @ 0x000140de ---
+int __stdcall sub_140DE(int a1)
+{
+  int result; // eax
+  int v2; // ecx
+
+  result = a1;
+  v2 = *(_DWORD *)(a1 + 12);
+  if ( v2 )
+  {
+    *(_DWORD *)(a1 + 12) = 0;
+    *(_DWORD *)(v2 + 12) = 0;
+    *(_BYTE *)(a1 + 85) = 0;
+    return sub_13FCA(a1);
+  }
+  return result;
+}
+
+
+// --- callee: sub_1121C @ 0x0001121c ---
+int __stdcall sub_1121C(int a1, PIRP Irp)
+{
+  int result; // eax
+  _DWORD *v3; // esi
+  int v4; // eax
+
+  result = sub_14C80(a1, 0);
+  v3 = *(_DWORD **)(a1 + 384);
+  while ( v3 != (_DWORD *)(a1 + 384) )
+  {
+    v4 = (int)v3;
+    v3 = (_DWORD *)*v3;
+    result = sub_13E20(a1, Irp, v4);
+  }
+  return result;
+}
+
+
+// --- callee: sub_11320 @ 0x00011320 ---
+_DWORD *__stdcall sub_11320(int a1)
+{
+  volatile LONG **v1; // edi
+  volatile LONG *v2; // esi
+  _DWORD *v3; // esi
+  _DWORD *result; // eax
+
+  v1 = (volatile LONG **)(a1 + 384);
+  while ( 1 )
+  {
+    v2 = *v1;
+    if ( *v1 == (volatile LONG *)v1 )
+      break;
+    **((_DWORD **)v2 + 1) = *v2;
+    *(_DWORD *)(*v2 + 4) = *((_DWORD *)v2 + 1);
+    *((_DWORD *)v2 + 1) = v2;
+    *v2 = (volatile LONG)v2;
+    if ( !InterlockedDecrement(v2 + 2) )
+      sub_11258(v2);
+  }
+  v3 = (_DWORD *)(a1 + 392);
+  while ( 1 )
+  {
+    result = (_DWORD *)*v3;
+    if ( (_DWORD *)*v3 == v3 )
+      break;
+    sub_1127A();
+  }
+  return result;
+}
+
+
+// --- callee: sub_11D5C @ 0x00011d5c ---
+int __stdcall sub_11D5C(int a1, _DWORD *a2)
+{
+  *a2 = *(_DWORD *)(a1 + 512);
+  a2[1] = *(_DWORD *)(a1 + 508);
+  return 0;
+}
+
+
+// --- callee: sub_11BF8 @ 0x00011bf8 ---
+int __stdcall sub_11BF8(char a1, int a2, PIRP Irp, int a4, int *a5, int a6)
+{
+  int result; // eax
+  int v7; // eax
+  int v8; // eax
+  int v9; // eax
+  int v10; // eax
+  int v11; // eax
+  int v12; // eax
+  int v13[24]; // [esp+8h] [ebp-60h] BYREF
+
+  memset(v13, 0, sizeof(v13));
+  v13[18] = *(_DWORD *)(a4 + 12);
+  LOWORD(v13[19]) = *(_WORD *)(a4 + 16);
+  v13[6] = *a5;
+  LOWORD(v13[0]) = 80;
+  v13[8] = a6;
+  if ( a1 )
+    v13[5] |= 1u;
+  if ( (*(_BYTE *)(a4 + 2) & 1) != 0 )
+    v13[5] |= 2u;
+  if ( *(_DWORD *)(a4 + 4) == 1 )
+  {
+    v10 = *(_DWORD *)(a4 + 8);
+    if ( v10 )
+    {
+      v11 = v10 - 1;
+      if ( v11 )
+      {
+        v12 = v11 - 1;
+        if ( v12 )
+        {
+          if ( v12 != 1 )
+            return -536866803;
+          HIWORD(v13[0]) = 31;
+        }
+        else
+        {
+          HIWORD(v13[0]) = 28;
+        }
+      }
+      else
+      {
+        HIWORD(v13[0]) = 27;
+      }
+    }
+    else
+    {
+      HIWORD(v13[0]) = 26;
+    }
+  }
+  else
+  {
+    if ( *(_DWORD *)(a4 + 4) != 2 )
+      return -536866802;
+    v7 = *(_DWORD *)(a4 + 8);
+    if ( v7 )
+    {
+      v8 = v7 - 1;
+      if ( v8 )
+      {
+        v9 = v8 - 1;
+        if ( v9 )
+        {
+          if ( v9 != 1 )
+            return -536866803;
+          HIWORD(v13[0]) = 32;
+        }
+        else
+        {
+          HIWORD(v13[0]) = 25;
+        }
+      }
+      else
+      {
+        HIWORD(v13[0]) = 24;
+      }
+    }
+    else
+    {
+      HIWORD(v13[0]) = 23;
+    }
+  }
+  result = sub_14A62(a2, Irp, (int)v13, *(PLARGE_INTEGER *)(a2 + 508));
+  if ( !result )
+    *a5 = v13[6];
+  return result;
+}
+
+
+// --- callee: sub_1184E @ 0x0001184e ---
+int __stdcall sub_1184E(int a1, PIRP Irp, unsigned __int16 *a3)
+{
+  int **v4; // eax
+  _WORD *v5; // esi
+  _DWORD *v6; // eax
+  int v7; // ecx
+  int v10; // [esp+Ch] [ebp+8h]
+  int v11; // [esp+14h] [ebp+10h]
+
+  if ( !*(_BYTE *)(a1 + 570) )
+    return -536866810;
+  v4 = sub_115DA((int ***)a1, *a3);
+  if ( !v4 )
+    return -536866794;
+  v11 = (int)v4[2];
+  sub_1129A(a1, Irp, (int)v4);
+  v5 = sub_15556(0x2A4u, 0x37304955u);
+  if ( v5 )
+  {
+    memset(v5, 0, 0x2A4u);
+    *((_DWORD *)v5 + 4) = v11;
+    v5[1] = 1;
+    *v5 = 676;
+    v5[10] = 656;
+    *((_BYTE *)v5 + 22) = *(_BYTE *)a3;
+    *((_BYTE *)v5 + 23) = *((_BYTE *)a3 + 2);
+    v6 = v5 + 24;
+    v7 = 32;
+    do
+    {
+      *v6 = *((_DWORD *)a3 + 1);
+      v6 += 5;
+      --v7;
+    }
+    while ( v7 );
+    v10 = sub_14A62(a1, Irp, (int)v5, *(PLARGE_INTEGER *)(a1 + 508));
+    if ( !v10 )
+      v10 = sub_11380((_DWORD *)v5 + 5, a1, Irp, v11);
+  }
+  else
+  {
+    v10 = -536866813;
+  }
+  if ( v5 )
+    sub_15572(v5);
+  return v10;
+}
+
+
+// --- callee: sub_1129A @ 0x0001129a ---
+int __stdcall sub_1129A(int a1, PIRP Irp, int a3)
+{
+  _DWORD *v3; // edi
+  int v4; // esi
+  int v5; // eax
+  int v6; // eax
+
+  v3 = *(_DWORD **)(a1 + 384);
+  while ( v3 != (_DWORD *)(a1 + 384) )
+  {
+    v4 = (int)v3;
+    v5 = v3[4];
+    v3 = (_DWORD *)*v3;
+    if ( v5 == a3 )
+    {
+      sub_13E20(a1, Irp, v4);
+      v6 = *(_DWORD *)(v4 + 12);
+      if ( v6 )
+        sub_14C80(a1, *(_DWORD *)(v6 + 8));
+      sub_140DE(v4);
+      **(_DWORD **)(v4 + 4) = *(_DWORD *)v4;
+      *(_DWORD *)(*(_DWORD *)v4 + 4) = *(_DWORD *)(v4 + 4);
+      *(_DWORD *)(v4 + 4) = v4;
+      *(_DWORD *)v4 = v4;
+      if ( !InterlockedDecrement((volatile LONG *)(v4 + 8)) )
+        sub_11258(v4);
+    }
+  }
+  return sub_1127A();
+}
+
+
+// --- callee: sub_12276 @ 0x00012276 ---
+int __stdcall sub_12276(_DWORD *Context, _DWORD *a2)
+{
+  Context[128] = *a2;
+  Context[127] = a2[1];
+  sub_11D84(Context);
+  return 0;
+}
+
+
+// --- callee: sub_11CF8 @ 0x00011cf8 ---
+int __stdcall sub_11CF8(int a1, PIRP Irp, _DWORD *a3)
+{
+  int result; // eax
+  union _LARGE_INTEGER *v4; // [esp-8h] [ebp-68h]
+  int v5[24]; // [esp+0h] [ebp-60h] BYREF
+
+  if ( *(_DWORD *)(a1 + 212) )
+    return (*(int (__stdcall **)(_DWORD, _DWORD *))(*(_DWORD *)(a1 + 212) + 20))(
+             *(_DWORD *)(*(_DWORD *)(a1 + 212) + 4),
+             a3);
+  v4 = *(union _LARGE_INTEGER **)(a1 + 508);
+  memset(v5, 0, sizeof(v5));
+  v5[0] = 458776;
+  result = sub_14A62(a1, Irp, (int)v5, v4);
+  if ( !result )
+    *a3 = v5[4];
+  return result;
+}
+
+
+// --- callee: sub_11F1E @ 0x00011f1e ---
+int __stdcall sub_11F1E(int a1, PIRP Irp)
+{
+  int result; // eax
+
+  if ( !*(_BYTE *)(a1 + 570) )
+    return -536866810;
+  sub_114B2(a1, Irp, 0);
+  if ( *(_BYTE *)(a1 + 569) )
+    return -536866793;
+  result = sub_14988(a1, Irp, 0, 2228231, *(PLARGE_INTEGER *)(a1 + 508));
+  if ( result >= 0 )
+    return 0;
+  return result;
+}
+
+
+// --- callee: sub_14988 @ 0x00014988 ---
+NTSTATUS __stdcall sub_14988(int a1, PIRP Irp, int a3, int a4, PLARGE_INTEGER Timeout)
+{
+  _DWORD *v5; // edx
+  ULONG v6; // eax
+  struct _KEVENT Event; // [esp+Ch] [ebp-18h] BYREF
+  __int64 v9; // [esp+1Ch] [ebp-8h] BYREF
+  union _LARGE_INTEGER *Timeouta; // [esp+3Ch] [ebp+18h]
+
+  KeInitializeEvent(&Event, NotificationEvent, 0);
+  if ( Timeout )
+  {
+    v9 = -10000LL * (unsigned int)Timeout;
+    Timeouta = (union _LARGE_INTEGER *)&v9;
+  }
+  else
+  {
+    Timeouta = 0;
+  }
+  v5 = (_DWORD *)(Irp->Tail.Overlay.PacketType - 36);
+  memset(v5, 0, 0x24u);
+  v5[3] = a4;
+  v5[1] = a3;
+  *(_BYTE *)v5 = 15;
+  v6 = Irp->Tail.Overlay.PacketType - 36;
+  *(_DWORD *)(v6 + 28) = USBD_SyncCompletionRoutine;
+  *(_DWORD *)(v6 + 32) = &Event;
+  *(_BYTE *)(v6 + 3) = -32;
+  IofCallDriver(*(PDEVICE_OBJECT *)(a1 + 168), Irp);
+  if ( KeWaitForSingleObject(&Event, Suspended, 0, 0, Timeouta) == 258 )
+  {
+    IoCancelIrp(Irp);
+    KeWaitForSingleObject(&Event, Suspended, 0, 0, 0);
+    return -536866804;
+  }
+  else
+  {
+    if ( Irp->IoStatus.Status == 259 )
+      Irp->IoStatus.Status = -1073741823;
+    return Irp->IoStatus.Status;
+  }
+}
+
+
+// --- callee: sub_11E60 @ 0x00011e60 ---
+int __stdcall sub_11E60(int a1, _DWORD *a2)
+{
+  int *v3; // eax
+  _BYTE *v4; // ecx
+  int *v5; // eax
+  int v6; // ebx
+  _DWORD *v7; // ecx
+  int v9; // [esp+18h] [ebp+Ch]
+
+  v9 = 0;
+  memset(a2, 0, 0x308u);
+  v3 = *(int **)(a1 + 392);
+  v4 = a2 + 2;
+  while ( v3 != (int *)(a1 + 392) )
+  {
+    *v4 = *((_BYTE *)v3 + 14);
+    v4[1] = *((_BYTE *)v3 + 15);
+    v4[2] = *((_BYTE *)v3 + 16);
+    v4[3] = *((_BYTE *)v3 + 17);
+    v4[4] = *((_BYTE *)v3 + 18);
+    v4[5] = *((_BYTE *)v3 + 24);
+    v4 += 8;
+    if ( (unsigned int)++v9 >= 0x20 )
+      break;
+    v3 = (int *)*v3;
+  }
+  *a2 = v9;
+  v5 = *(int **)(a1 + 384);
+  v6 = 0;
+  v7 = a2 + 66;
+  while ( v5 != (int *)(a1 + 384) )
+  {
+    *v7 = v5[6];
+    v7[1] = v5[8];
+    *((_WORD *)v7 + 4) = *((_WORD *)v5 + 10);
+    *((_BYTE *)v7 + 10) = *((_BYTE *)v5 + 22);
+    *((_BYTE *)v7 + 11) = *((_BYTE *)v5 + 23);
+    *((_BYTE *)v7 + 12) = *(_BYTE *)(v5[4] + 14);
+    v7 += 4;
+    if ( (unsigned int)++v6 >= 0x20 )
+      break;
+    v5 = (int *)*v5;
+  }
+  a2[1] = v6;
+  return 0;
+}
+
+
+// --- callee: sub_11DCC @ 0x00011dcc ---
+int __stdcall sub_11DCC(PRKMUTEX Mutex, _DWORD *a2)
+{
+  POWER_STATE v3; // eax
+  int v4; // [esp-4h] [ebp-4h]
+
+  if ( *a2 )
+  {
+    switch ( *a2 )
+    {
+      case 1:
+        v4 = 2;
+        break;
+      case 2:
+        v4 = 3;
+        break;
+      case 3:
+        v4 = 4;
+        break;
+      default:
+        return -536866792;
+    }
+    v3.SystemState = v4;
+  }
+  else
+  {
+    v3.SystemState = PowerSystemWorking;
+  }
+  return sub_15FAA(Mutex, v3);
+}
+
+
+// --- callee: sub_15FAA @ 0x00015faa ---
+POWER_STATE __stdcall sub_15FAA(PRKMUTEX Mutex, POWER_STATE PowerState)
+{
+  struct _LIST_ENTRY *Flink; // eax
+  POWER_STATE PowerStatea; // [esp+14h] [ebp+Ch]
+
+  if ( PowerState.SystemState > PowerSystemSleeping3 || PowerState.SystemState < PowerSystemWorking )
+  {
+    PowerStatea.SystemState = -536866792;
+  }
+  else if ( LOBYTE(Mutex[17].OwnerThread) )
+  {
+    Flink = Mutex[4].MutantListEntry.Flink;
+    if ( (struct _LIST_ENTRY *)PowerState.SystemState == Flink )
+    {
+      PowerStatea.SystemState = PowerSystemUnspecified;
+    }
+    else if ( PowerState.SystemState == PowerSystemWorking || Flink == (struct _LIST_ENTRY *)1 )
+    {
+      InterlockedIncrement((volatile LONG *)&Mutex[7].Header.WaitListHead);
+      KeReleaseMutex(Mutex, 0);
+      PowerStatea.SystemState = sub_15CF6((PDEVICE_OBJECT)Mutex[5].Header.SignalState, 2u, PowerState);
+      KeWaitForSingleObject(Mutex, Executive, 0, 0, 0);
+      if ( !InterlockedDecrement((volatile LONG *)&Mutex[7].Header.WaitListHead) )
+        sub_1540C(Mutex);
+    }
+    else
+    {
+      PowerStatea.SystemState = -536866790;
+    }
+  }
+  else
+  {
+    PowerStatea.SystemState = -536866806;
+  }
+  return PowerStatea;
+}
+
+
+// --- callee: sub_120C0 @ 0x000120c0 ---
+int __stdcall sub_120C0(int a1)
+{
+  *(_DWORD *)a1 = 0;
+  *(_DWORD *)(a1 + 4) = 0;
+  *(_DWORD *)(a1 + 8) = 0;
+  *(_WORD *)a1 = 560;
+  *(_WORD *)(a1 + 2) = 553;
+  *(_DWORD *)(a1 + 4) = 1338;
+  return 0;
+}
+
+
+// --- callee: sub_120EE @ 0x000120ee ---
+int __stdcall sub_120EE(int a1, int a2)
+{
+  int v2; // ecx
+
+  *(_DWORD *)a2 = 0;
+  *(_DWORD *)(a2 + 4) = 0;
+  *(_DWORD *)(a2 + 8) = 0;
+  *(_DWORD *)(a2 + 12) = 0;
+  v2 = *(_DWORD *)(a1 + 208);
+  if ( v2 && *(_DWORD *)(v2 + 32) && (*(unsigned __int8 (__stdcall **)(_DWORD))(v2 + 32))(*(_DWORD *)(v2 + 4)) )
+    *(_BYTE *)(a2 + 2) |= 0x10u;
+  *(_DWORD *)(a2 + 4) = *(_DWORD *)(a1 + 236);
+  return 0;
+}
+
+
+// --- callee: sub_1213E @ 0x0001213e ---
+int __stdcall sub_1213E(int a1, _DWORD *a2)
+{
+  int v2; // esi
+  _DWORD *v3; // edi
+  int v4; // ecx
+  NTSTATUS v5; // esi
+  _DWORD *v6; // eax
+  int v7; // eax
+  IRP *Irp; // edi
+  _DWORD *v9; // eax
+  int v11; // [esp+8h] [ebp-1Ch] BYREF
+  int v12; // [esp+Ch] [ebp-18h]
+  int v13; // [esp+10h] [ebp-14h]
+  int v14; // [esp+14h] [ebp-10h]
+  _DWORD v15[2]; // [esp+18h] [ebp-Ch] BYREF
+  int v16; // [esp+20h] [ebp-4h] BYREF
+
+  v2 = a1;
+  v3 = a2;
+  *a2 = 0;
+  *++v3 = 0;
+  *++v3 = 0;
+  v3[1] = 0;
+  v4 = *(_DWORD *)(v2 + 212);
+  v16 = 8;
+  if ( v4 && *(_DWORD *)(v4 + 28) )
+  {
+    v5 = (*(int (__stdcall **)(_DWORD, _DWORD, _DWORD *, int *, int *))(v4 + 28))(
+           *(_DWORD *)(v4 + 4),
+           0,
+           v15,
+           &v16,
+           &a1);
+    if ( !v5 )
+    {
+      v6 = a2;
+      *a2 = v15[0];
+      v6[1] = v15[1];
+    }
+  }
+  else
+  {
+    v11 = 0;
+    v12 = 0;
+    v13 = 0;
+    v14 = 0;
+    v7 = *(_DWORD *)(v2 + 168);
+    v11 = 5;
+    Irp = IoAllocateIrp(*(_BYTE *)(v7 + 48) + 1, 0);
+    if ( Irp )
+    {
+      v5 = sub_14988(v2, Irp, (int)&v11, 2229280, *(PLARGE_INTEGER *)(v2 + 508));
+      if ( !v5 )
+      {
+        v9 = a2;
+        *a2 = v12;
+        v9[1] = v13;
+      }
+      IoFreeIrp(Irp);
+    }
+    else
+    {
+      return -536866813;
+    }
+  }
+  return v5;
+}
+
+
+// --- callee: sub_11E0E @ 0x00011e0e ---
+int __stdcall sub_11E0E(int a1, _DWORD *a2)
+{
+  int result; // eax
+
+  result = 0;
+  switch ( *(_DWORD *)(a1 + 144) )
+  {
+    case 1:
+      *a2 = 0;
+      break;
+    case 2:
+      *a2 = 1;
+      break;
+    case 3:
+      *a2 = 2;
+      break;
+    case 4:
+      *a2 = 3;
+      break;
+    default:
+      return -536866790;
+  }
+  return result;
+}
+
+
+// --- callee: sub_11F78 @ 0x00011f78 ---
+NTSTATUS __stdcall sub_11F78(int a1, PIRP Irp)
+{
+  NTSTATUS result; // eax
+
+  if ( *(_BYTE *)(a1 + 569) )
+    return -536866793;
+  result = sub_14988(a1, Irp, 0, 2228255, *(PLARGE_INTEGER *)(a1 + 508));
+  if ( result >= 0 )
+    return 0;
+  return result;
+}
+
+
+// --- callee: sub_13DD8 @ 0x00013dd8 ---
+int __stdcall sub_13DD8(int a1, PIRP Irp, int a3)
+{
+  union _LARGE_INTEGER *v4; // [esp-4h] [ebp-68h]
+  int v5[24]; // [esp+4h] [ebp-60h] BYREF
+
+  memset(v5, 0, sizeof(v5));
+  v5[4] = *(_DWORD *)(a3 + 28);
+  v4 = *(union _LARGE_INTEGER **)(a1 + 508);
+  v5[0] = 1966104;
+  return sub_14A62(a1, Irp, (int)v5, v4);
+}
+
+
+// --- callee: sub_13FCA @ 0x00013fca ---
+_DWORD *__stdcall sub_13FCA(_DWORD *a1)
+{
+  _DWORD *result; // eax
+
+  result = a1;
+  a1[10] = 0;
+  a1[11] = 0;
+  a1[12] = 0;
+  a1[13] = 0;
+  return result;
+}
+
+
+// --- callee: sub_14078 @ 0x00014078 ---
+int __stdcall sub_14078(int a1, int a2, _BYTE *a3)
+{
+  int v3; // esi
+  int *v4; // eax
+  int v5; // edi
+
+  v3 = *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(a2 + 96) + 24) + 12);
+  if ( *(_DWORD *)(v3 + 12) )
+    return -536866808;
+  v4 = *(int **)(a1 + 384);
+  v5 = -536866797;
+  if ( v4 != (int *)(a1 + 384) )
+  {
+    while ( *((_BYTE *)v4 + 22) != *a3 )
+    {
+      v4 = (int *)*v4;
+      if ( v4 == (int *)(a1 + 384) )
+        return v5;
+    }
+    v5 = 0;
+    if ( !v4[3] )
+    {
+      v4[3] = v3;
+      *(_DWORD *)(v3 + 12) = v4;
+      sub_13FCA(v4);
+      return v5;
+    }
+    return -536866808;
+  }
+  return v5;
+}
+
+
+// --- callee: sub_13E20 @ 0x00013e20 ---
+int __stdcall sub_13E20(int a1, PIRP Irp, int a3)
+{
+  int result; // eax
+  union _LARGE_INTEGER *v4; // [esp-Ch] [ebp-6Ch]
+  int v5[24]; // [esp+0h] [ebp-60h] BYREF
+
+  if ( !*(_BYTE *)(a1 + 568) )
+    return -536866806;
+  result = 0;
+  if ( *(_BYTE *)(a3 + 86) )
+  {
+    v4 = *(union _LARGE_INTEGER **)(a1 + 508);
+    memset(v5, 0, sizeof(v5));
+    v5[4] = *(_DWORD *)(a3 + 28);
+    v5[0] = 131096;
+    result = sub_14ACE(a1, Irp, (int)v5, v4);
+    *(_BYTE *)(a3 + 86) = 0;
+  }
+  return result;
+}
+
+
+// --- callee: sub_14ACE @ 0x00014ace ---
+NTSTATUS __stdcall sub_14ACE(int a1, PIRP Irp, int a3, PLARGE_INTEGER Timeout)
+{
+  NTSTATUS result; // eax
+
+  *(_DWORD *)(a3 + 4) = -1;
+  result = sub_14988(a1, Irp, a3, 2228227, Timeout);
+  if ( result != -536866804 && *(_DWORD *)(a3 + 4) != -1 )
+    return sub_14946();
+  return result;
+}
+
+
+// --- callee: sub_14C80 @ 0x00014c80 ---
+_DWORD *__stdcall sub_14C80(_DWORD *a1, int a2)
+{
+  _DWORD *v2; // edi
+  _DWORD *v3; // esi
+  int v4; // ebx
+  int *v5; // eax
+  int v6; // ecx
+  _DWORD *v7; // esi
+  IRP *v8; // ecx
+  _DWORD *result; // eax
+  int v10; // [esp+8h] [ebp-10h] BYREF
+  int *v11; // [esp+Ch] [ebp-Ch]
+  PKSPIN_LOCK SpinLock; // [esp+10h] [ebp-8h]
+  KIRQL NewIrql; // [esp+17h] [ebp-1h]
+
+  v11 = &v10;
+  v10 = (int)&v10;
+  SpinLock = a1 + 70;
+  NewIrql = KfAcquireSpinLock(a1 + 70);
+  v2 = (_DWORD *)a1[66];
+  while ( v2 != a1 + 66 )
+  {
+    v3 = v2;
+    v2 = (_DWORD *)*v2;
+    v4 = v3[3];
+    if ( !a2 || *(_DWORD *)(*(_DWORD *)(v4 + 96) + 24) == a2 )
+    {
+      *(_DWORD *)v3[1] = *v3;
+      *(_DWORD *)(*v3 + 4) = v3[1];
+      v3[1] = v3;
+      *v3 = v3;
+      if ( InterlockedExchange((volatile LONG *)(v4 + 56), 0) )
+      {
+        *(_DWORD *)(v4 + 64) = 0;
+        v5 = v11;
+      }
+      else
+      {
+        v5 = (int *)a1[69];
+      }
+      v6 = *v5;
+      v3[1] = v5;
+      *v3 = v6;
+      *(_DWORD *)(*v5 + 4) = v3;
+      *v5 = (int)v3;
+    }
+  }
+  KfReleaseSpinLock(SpinLock, NewIrql);
+  while ( 1 )
+  {
+    result = (_DWORD *)v10;
+    if ( (int *)v10 == &v10 )
+      break;
+    **(_DWORD **)(v10 + 4) = *(_DWORD *)v10;
+    *(_DWORD *)(*result + 4) = result[1];
+    result[1] = result;
+    v7 = result;
+    v8 = (IRP *)result[3];
+    *result = result;
+    v8->IoStatus.Information = 0;
+    v8->IoStatus.Status = -1073741536;
+    IofCompleteRequest(v8, 0);
+    sub_14B10(v7);
+  }
+  return result;
+}
+
+
+// --- callee: sub_14B10 @ 0x00014b10 ---
+void __stdcall sub_14B10(int a1)
+{
+  int v1; // eax
+
+  if ( a1 )
+  {
+    if ( *(_DWORD *)(a1 + 20) )
+    {
+      IoFreeMdl(*(PMDL *)(a1 + 20));
+      *(_DWORD *)(a1 + 20) = 0;
+    }
+    v1 = *(_DWORD *)(a1 + 8);
+    if ( v1 )
+    {
+      if ( !InterlockedDecrement((volatile LONG *)(v1 + 8)) )
+        sub_11258(*(_DWORD *)(a1 + 8));
+      *(_DWORD *)(a1 + 8) = 0;
+    }
+    sub_1314E(a1);
+  }
+}
+
+
+// --- callee: sub_13F30 @ 0x00013f30 ---
+int __stdcall sub_13F30(int a1, int a2, int *NewIrql, _DWORD *a4)
+{
+  int v5; // [esp+Ch] [ebp-4h]
+  KIRQL v6; // [esp+23h] [ebp+13h]
+
+  v5 = *NewIrql;
+  memset(a4, 0, 0x20u);
+  v6 = KfAcquireSpinLock((PKSPIN_LOCK)(a1 + 280));
+  if ( *(_BYTE *)(a2 + 85) )
+    a4[1] = sub_110A4(a2 + 56, a4);
+  a4[2] = *(_DWORD *)(a2 + 40);
+  a4[3] = *(_DWORD *)(a2 + 44);
+  a4[4] = *(_DWORD *)(a2 + 48);
+  a4[5] = *(_DWORD *)(a2 + 52);
+  if ( (v5 & 1) != 0 )
+  {
+    *(_DWORD *)(a2 + 40) = 0;
+    *(_DWORD *)(a2 + 44) = 0;
+  }
+  if ( (v5 & 2) != 0 )
+    *(_DWORD *)(a2 + 48) = 0;
+  if ( (v5 & 4) != 0 )
+    *(_DWORD *)(a2 + 52) = 0;
+  KfReleaseSpinLock((PKSPIN_LOCK)(a1 + 280), v6);
+  return 0;
+}
+
+
+// --- callee: sub_110A4 @ 0x000110a4 ---
+int __stdcall sub_110A4(unsigned int *a1, unsigned int *a2)
+{
+  unsigned int v3; // edi
+  ULONG LowPart; // ecx
+  _DWORD *v5; // ecx
+  unsigned int v6; // edx
+  __int64 v8; // [esp+Ch] [ebp-Ch]
+  unsigned int v9; // [esp+14h] [ebp-4h]
+  _DWORD *v10; // [esp+20h] [ebp+8h]
+
+  v3 = 0;
+  LODWORD(v8) = 0;
+  v9 = *a1;
+  if ( a1[3] )
+  {
+    LowPart = KeTickCount.LowPart;
+    v10 = (_DWORD *)LowPart;
+    while ( *(_DWORD *)(LowPart + 4) != *(_DWORD *)(LowPart + 8) )
+      _mm_pause();
+    v5 = (_DWORD *)a1[5];
+    while ( 1 )
+    {
+      if ( v5 == (_DWORD *)a1[3] )
+      {
+        if ( !a1[6] )
+          break;
+        v5 = (_DWORD *)a1[4];
+      }
+      v6 = *v10 - *(v5 - 1);
+      v5 -= 2;
+      if ( v6 >= a1[1] )
+        break;
+      v3 += *v5;
+      if ( v5 == (_DWORD *)a1[5] )
+      {
+        v9 = v6 * a1[2] / 0x2710;
+        break;
+      }
+    }
+    if ( v9 )
+      v8 = 1000LL * v3 / v9;
+  }
+  else
+  {
+    v9 = 0;
+  }
+  *a2 = v9;
+  return v8;
+}
+
+
+// --- callee: sub_13ECA @ 0x00013eca ---
+int __stdcall sub_13ECA(int NewIrql, int a2, _DWORD *a3)
+{
+  KSPIN_LOCK *v3; // ebx
+  int v5; // [esp+Ch] [ebp-4h]
+  KIRQL v6; // [esp+1Bh] [ebp+Bh]
+
+  v5 = 0;
+  v3 = (KSPIN_LOCK *)(NewIrql + 280);
+  v6 = KfAcquireSpinLock((PKSPIN_LOCK)(NewIrql + 280));
+  *(_BYTE *)(a2 + 85) = 0;
+  sub_11020(a2 + 56);
+  if ( *a3 )
+  {
+    v5 = sub_11162(a2 + 56, *a3);
+    if ( !v5 )
+      *(_BYTE *)(a2 + 85) = 1;
+  }
+  KfReleaseSpinLock(v3, v6);
+  return v5;
+}
+
+
+// --- callee: sub_11020 @ 0x00011020 ---
+void __stdcall sub_11020(int a1)
+{
+  if ( *(_DWORD *)(a1 + 12) )
+  {
+    sub_15572(*(void **)(a1 + 12));
+    *(_DWORD *)(a1 + 12) = 0;
+  }
+}
+
+
+// --- callee: sub_11162 @ 0x00011162 ---
+int __stdcall sub_11162(unsigned int *a1, unsigned int a2)
+{
+  int result; // eax
+  void *v3; // eax
+  SIZE_T v4; // ebx
+  PVOID v5; // edi
+  ULONG TimeIncrement; // eax
+
+  if ( a2 > 0x1388 )
+    return -536870144;
+  if ( a2 < 0xA )
+    a2 = 10;
+  v3 = (void *)a1[3];
+  if ( v3 )
+  {
+    sub_15572(v3);
+    a1[3] = 0;
+  }
+  v4 = 8 * ((a2 << 8) / 0x3E8);
+  v5 = sub_15556(v4, 0x32304955u);
+  a1[3] = (unsigned int)v5;
+  if ( !v5 )
+    return -536870656;
+  memset(v5, 0, v4);
+  a1[4] = v4 + a1[3];
+  *a1 = a2;
+  TimeIncrement = KeQueryTimeIncrement();
+  a1[2] = TimeIncrement;
+  a1[1] = 10000 * a2 / TimeIncrement;
+  a1[5] = a1[3];
+  result = 0;
+  a1[6] = 0;
+  return result;
+}
+
+
+// --- callee: sub_13EAA @ 0x00013eaa ---
+int __stdcall sub_13EAA(int a1, _DWORD *a2)
+{
+  *(_BYTE *)(a1 + 84) = HIWORD(*a2) & 1;
+  return 0;
+}
+
+
+// --- callee: sub_13E84 @ 0x00013e84 ---
+int __stdcall sub_13E84(int a1, _DWORD *a2)
+{
+  *a2 = 0;
+  if ( *(_BYTE *)(a1 + 84) )
+    *a2 = 0x10000;
+  return 0;
+}
+
+
+// --- callee: sub_1225C @ 0x0001225c ---
+int __stdcall sub_1225C(int a1)
+{
+  *(_DWORD *)(a1 + 404) = 0;
+  return 0;
+}
+
+
+// --- callee: sub_1220A @ 0x0001220a ---
+int __stdcall sub_1220A(int a1)
+{
+  PEPROCESS CurrentProcess; // eax
+  struct _KPROCESS *v2; // ecx
+  _DWORD *i; // ecx
+
+  CurrentProcess = IoGetCurrentProcess();
+  v2 = *(struct _KPROCESS **)(a1 + 404);
+  if ( CurrentProcess == v2 )
+    return 0;
+  if ( v2 )
+    return -536866784;
+  for ( i = *(_DWORD **)(a1 + 408); ; i = (_DWORD *)*i )
+  {
+    if ( i == (_DWORD *)(a1 + 408) )
+    {
+      *(_DWORD *)(a1 + 404) = CurrentProcess;
+      return 0;
+    }
+    if ( (PEPROCESS)i[4] != CurrentProcess )
+      break;
+  }
+  return -536866783;
+}
+
+
+// --- callee: sub_13FEA @ 0x00013fea ---
+int __stdcall sub_13FEA(char a1, int a2, PIRP Irp, int a4, int a5, int *a6, int a7)
+{
+  int v7; // eax
+  int result; // eax
+  int v9[24]; // [esp+4h] [ebp-60h] BYREF
+
+  memset(v9, 0, sizeof(v9));
+  v7 = *(_DWORD *)(a4 + 28);
+  v9[0] = 524368;
+  v9[4] = v7;
+  if ( a1 )
+    v9[5] = 1;
+  if ( (*(_BYTE *)(a5 + 2) & 1) != 0 )
+    v9[5] |= 2u;
+  v9[6] = *a6;
+  v9[8] = a7;
+  memmove(&v9[18], (const void *)(a5 + 4), 8u);
+  result = sub_14A62(a2, Irp, (int)v9, *(PLARGE_INTEGER *)(a2 + 508));
+  if ( !result )
+    *a6 = v9[6];
+  return result;
+}
+
+
+============================================================
+=== Handler: RESET_PIPE ===
+// Known VA hint: 0x00013dd8, function start: 0x00013dd8
+============================================================
+int __stdcall sub_13DD8(int a1, PIRP Irp, int a3)
+{
+  union _LARGE_INTEGER *v4; // [esp-4h] [ebp-68h]
+  int v5[24]; // [esp+4h] [ebp-60h] BYREF
+
+  memset(v5, 0, sizeof(v5));
+  v5[4] = *(_DWORD *)(a3 + 28);
+  v4 = *(union _LARGE_INTEGER **)(a1 + 508);
+  v5[0] = 1966104;
+  return sub_14A62(a1, Irp, (int)v5, v4);
+}
+
+
+// --- callee: sub_14A62 @ 0x00014a62 ---
+int __stdcall sub_14A62(int a1, PIRP Irp, int a3, PLARGE_INTEGER Timeout)
+{
+  int result; // eax
+  int v5; // eax
+
+  *(_DWORD *)(a3 + 4) = -1;
+  if ( *(_BYTE *)(a1 + 569) )
+    return -536866793;
+  result = sub_14988(a1, Irp, a3, 2228227, Timeout);
+  if ( result == -1073741811 )
+  {
+    v5 = *(_DWORD *)(a3 + 4);
+    if ( v5 != -1 && v5 )
+      return sub_14946();
+    return -536866792;
+  }
+  else if ( result != -536866804 && *(_DWORD *)(a3 + 4) != -1 )
+  {
+    return sub_14946();
+  }
+  return result;
+}
+
+
+// --- callee: sub_14988 @ 0x00014988 ---
+NTSTATUS __stdcall sub_14988(int a1, PIRP Irp, int a3, int a4, PLARGE_INTEGER Timeout)
+{
+  _DWORD *v5; // edx
+  ULONG v6; // eax
+  struct _KEVENT Event; // [esp+Ch] [ebp-18h] BYREF
+  __int64 v9; // [esp+1Ch] [ebp-8h] BYREF
+  union _LARGE_INTEGER *Timeouta; // [esp+3Ch] [ebp+18h]
+
+  KeInitializeEvent(&Event, NotificationEvent, 0);
+  if ( Timeout )
+  {
+    v9 = -10000LL * (unsigned int)Timeout;
+    Timeouta = (union _LARGE_INTEGER *)&v9;
+  }
+  else
+  {
+    Timeouta = 0;
+  }
+  v5 = (_DWORD *)(Irp->Tail.Overlay.PacketType - 36);
+  memset(v5, 0, 0x24u);
+  v5[3] = a4;
+  v5[1] = a3;
+  *(_BYTE *)v5 = 15;
+  v6 = Irp->Tail.Overlay.PacketType - 36;
+  *(_DWORD *)(v6 + 28) = USBD_SyncCompletionRoutine;
+  *(_DWORD *)(v6 + 32) = &Event;
+  *(_BYTE *)(v6 + 3) = -32;
+  IofCallDriver(*(PDEVICE_OBJECT *)(a1 + 168), Irp);
+  if ( KeWaitForSingleObject(&Event, Suspended, 0, 0, Timeouta) == 258 )
+  {
+    IoCancelIrp(Irp);
+    KeWaitForSingleObject(&Event, Suspended, 0, 0, 0);
+    return -536866804;
+  }
+  else
+  {
+    if ( Irp->IoStatus.Status == 259 )
+      Irp->IoStatus.Status = -1073741823;
+    return Irp->IoStatus.Status;
+  }
+}
+
+
+// --- callee: sub_14946 @ 0x00014946 ---
+unsigned int __usercall sub_14946@<eax>(int a1@<eax>)
+{
+  unsigned int result; // eax
+
+  if ( (a1 & 0xFFFF0000) == 0 )
+    return 0;
+  result = a1 | 0xE0000000;
+  if ( result == -536866816 )
+    return -402649088;
+  return result;
+}
+
+
+============================================================
+=== Additional functions referencing IOCTL codes ===
+============================================================

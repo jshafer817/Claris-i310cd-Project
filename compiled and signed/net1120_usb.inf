@@ -1,0 +1,165 @@
+; net1120_usb.inf - NET_1120 USB Camera USBIO-compatible x64 driver
+; Service name MUST be "net1120_usb" to match NET_USBIO.dll expectations
+; Class: Image (same as original x86 driver)
+;
+; This INF performs the COMPLETE installation in one step:
+;   - net1120_usb.sys           -> %SystemRoot%\System32\drivers       (DIRID 12)
+;   - NET_USBIO.dll  (32-bit)   -> %SystemRoot%\SysWOW64               (DIRID 16425)
+;   - netvcam.ax     (32-bit)   -> %SystemRoot%\SysWOW64               (DIRID 16425)
+;   - COM-registers netvcam.ax via AddReg (no regsvr32 needed)
+;
+; The COM keys are baked in via AddReg sections instead of the legacy
+; [RegisterDlls] directive (which is ignored by modern Windows when
+; PnpLockDown=1).  Keys mirror exactly what regsvr32 netvcam.ax produces.
+
+[Version]
+Signature   = "$Windows NT$"
+Class       = Image
+ClassGuid   = {6bdd1fc6-810f-11d0-bec7-08002be2092f}
+Provider    = %S_Provider%
+CatalogFile = net1120_usb.cat
+DriverVer = 05/10/2026,23.45.22.401
+PnpLockDown = 1
+
+[DestinationDirs]
+DefaultDestDir   = 12               ; %SystemRoot%\System32\drivers
+DriverCopyFiles  = 12               ; %SystemRoot%\System32\drivers
+WowCopyFiles     = 16425            ; %SystemRoot%\SysWOW64
+
+[SourceDisksNames]
+1 = %S_DiskName%,,,""
+
+[SourceDisksFiles]
+net1120_usb.sys = 1,,
+NET_USBIO.dll   = 1,,
+netvcam.ax      = 1,,
+
+[Manufacturer]
+%S_Mfg% = Standard,NTamd64
+
+[Standard.NTamd64]
+%S_DeviceDesc% = Install, USB\VID_0932&PID_0300&MI_00
+%S_DeviceDesc% = Install, USB\VID_0932&PID_0300&REV_0001&MI_00
+
+;==============================================================================
+; Install section
+;==============================================================================
+[Install.NT]
+CopyFiles = DriverCopyFiles, WowCopyFiles
+AddReg    = COM.AddReg
+
+[DriverCopyFiles]
+net1120_usb.sys
+
+[WowCopyFiles]
+NET_USBIO.dll
+netvcam.ax
+
+[Install.NT.HW]
+AddReg = HW.AddReg
+
+[HW.AddReg]
+HKR,,DeviceCharacteristics,0x10001,0x0100
+HKR,,Security,,"D:P(A;;GA;;;SY)(A;;GA;;;BA)(A;;GRGW;;;WD)"
+HKR,,DriverUserInterfaceGuid,%REG_SZ%,"{3F18F6FA-5305-4d2f-9338-1A00C00653DB}"
+HKR,,DisableDefaultInterface,%REG_DWORD%,1
+HKR,,PowerStateOnOpen,%REG_DWORD%,0
+HKR,,PowerStateOnClose,%REG_DWORD%,0
+HKR,,MinPowerStateUsed,%REG_DWORD%,3
+HKR,,MinPowerStateUnused,%REG_DWORD%,3
+HKR,,EnableRemoteWakeup,%REG_DWORD%,0
+HKR,,AbortPipesOnPowerDown,%REG_DWORD%,1
+HKR,,UnconfigureOnClose,%REG_DWORD%,1
+HKR,,ResetDeviceOnClose,%REG_DWORD%,0
+HKR,,MaxIsoPackets,%REG_DWORD%,512
+HKR,,ShortTransferOk,%REG_DWORD%,1
+HKR,,RequestTimeout,%REG_DWORD%,1000
+HKR,,SuppressPnPRemoveDlg,%REG_DWORD%,1
+
+[Install.NT.Wdf]
+KmdfService = net1120_usb, WdfSection
+
+[WdfSection]
+KmdfLibraryVersion = 1.15
+
+[Install.NT.Services]
+AddService = net1120_usb, 0x00000002, Service_Inst
+
+[Service_Inst]
+DisplayName    = %S_ServiceName%
+ServiceType    = 1
+StartType      = 3
+ErrorControl   = 1
+ServiceBinary  = %12%\net1120_usb.sys
+
+;==============================================================================
+; COM registration for netvcam.ax (the 32-bit DirectShow capture filter)
+;
+; Mirrors what regsvr32.exe netvcam.ax writes on a working x86 install,
+; verified against registry exports from a reference machine.
+;
+; Note on REG_EXPAND_SZ:
+;   The InprocServer32 default value MUST be REG_EXPAND_SZ when it contains
+;   environment variables like %SystemRoot%.  COM's LoadLibrary path resolves
+;   the value via ExpandEnvironmentStrings only if the value type is
+;   REG_EXPAND_SZ; with plain REG_SZ, the literal string "%SystemRoot%\..."
+;   is passed to LoadLibrary, which fails with 0x8007007E (module not found).
+;
+;   InfVerif (with PnpLockDown=1) requires environment-relative paths in
+;   AddReg values rather than hardcoded C:\Windows, so REG_EXPAND_SZ +
+;   %%SystemRoot%% is the only InfVerif-clean way to do this.
+;
+; All keys go under WOW6432Node because netvcam.ax is a 32-bit COM server.
+;==============================================================================
+[COM.AddReg]
+
+; --- Property-page helper class: {83F66876-B7F8-4374-92FE-96907B2ECF77} ---
+HKLM,"Software\Classes\WOW6432Node\CLSID\{83F66876-B7F8-4374-92FE-96907B2ECF77}",,%REG_SZ%,"NET Feature Cam Properties"
+HKLM,"Software\Classes\WOW6432Node\CLSID\{83F66876-B7F8-4374-92FE-96907B2ECF77}\InprocServer32",,%REG_EXPAND_SZ%,"%%SystemRoot%%\SysWOW64\netvcam.ax"
+HKLM,"Software\Classes\WOW6432Node\CLSID\{83F66876-B7F8-4374-92FE-96907B2ECF77}\InprocServer32","ThreadingModel",%REG_SZ%,"Both"
+HKLM,"Software\Classes\WOW6432Node\CLSID\{83F66876-B7F8-4374-92FE-96907B2ECF77}\FeatureControl","Feature",%REG_DWORD%,0x000003F2
+HKLM,"Software\Classes\WOW6432Node\CLSID\{83F66876-B7F8-4374-92FE-96907B2ECF77}\FeatureControl","Switch",%REG_DWORD%,0x000003F5
+
+; --- Capture filter: {8E14549A-DB61-4309-AFA1-3578E927E933} ---
+HKLM,"Software\Classes\WOW6432Node\CLSID\{8E14549A-DB61-4309-AFA1-3578E927E933}",,%REG_SZ%,"NET_1120"
+HKLM,"Software\Classes\WOW6432Node\CLSID\{8E14549A-DB61-4309-AFA1-3578E927E933}\InprocServer32",,%REG_EXPAND_SZ%,"%%SystemRoot%%\SysWOW64\netvcam.ax"
+HKLM,"Software\Classes\WOW6432Node\CLSID\{8E14549A-DB61-4309-AFA1-3578E927E933}\InprocServer32","ThreadingModel",%REG_SZ%,"Both"
+
+; --- Video Capture Sources category instance (makes the camera enumerable) ---
+; CLSID_VideoInputDeviceCategory = {860BB310-5D01-11d0-BD3B-00A0C911CE86}
+HKLM,"Software\Classes\WOW6432Node\CLSID\{860BB310-5D01-11d0-BD3B-00A0C911CE86}\Instance\{8E14549A-DB61-4309-AFA1-3578E927E933}","FriendlyName",%REG_SZ%,"NET_1120"
+HKLM,"Software\Classes\WOW6432Node\CLSID\{860BB310-5D01-11d0-BD3B-00A0C911CE86}\Instance\{8E14549A-DB61-4309-AFA1-3578E927E933}","CLSID",%REG_SZ%,"{8E14549A-DB61-4309-AFA1-3578E927E933}"
+HKLM,"Software\Classes\WOW6432Node\CLSID\{860BB310-5D01-11d0-BD3B-00A0C911CE86}\Instance\{8E14549A-DB61-4309-AFA1-3578E927E933}","FilterData",%REG_BINARY%,\
+    02,00,00,00,00,00,20,00,01,00,00,00,00,00,00,00,\
+    30,70,69,33,08,00,00,00,00,00,00,00,01,00,00,00,\
+    00,00,00,00,00,00,00,00,30,74,79,33,00,00,00,00,\
+    38,00,00,00,48,00,00,00,76,69,64,73,00,00,10,00,\
+    80,00,00,aa,00,38,9b,71,00,00,00,00,00,00,00,00,\
+    00,00,00,00,00,00,00,00
+
+
+;==============================================================================
+; Add this to the [Strings] section if it's not already present:
+;==============================================================================
+;
+;   REG_EXPAND_SZ   = 0x00020000
+;
+; Your existing [Strings] already has REG_SZ, REG_BINARY, and REG_DWORD,
+; so just add REG_EXPAND_SZ alongside them with the value 0x00020000.
+;==============================================================================
+
+;==============================================================================
+; Strings
+;==============================================================================
+[Strings]
+REG_SZ          = 0x00000000
+REG_EXPAND_SZ   = 0x00020000
+REG_BINARY      = 0x00000001
+REG_DWORD       = 0x00010001
+S_Provider      = "NET GmbH"
+S_Mfg           = "NET GmbH"
+S_DeviceDesc    = "NET_1120 Device (0)"
+S_ServiceName   = "net1120_usb"
+S_DiskName      = "NET_1120 Driver Disk"
+
+

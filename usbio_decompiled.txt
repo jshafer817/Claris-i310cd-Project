@@ -1,0 +1,2115 @@
+
+
+=== sub_10001F03 @ 0x10001F03 ===
+int __thiscall sub_10001F03(void *this, int a2)
+{
+  int v3; // [esp+4h] [ebp-4h]
+  int v4; // [esp+4h] [ebp-4h]
+
+  v3 = sub_10001769(&unk_10012698, this);
+  if ( v3 )
+    return v3;
+  Sleep(0xAu);
+  v4 = sub_100018C1(a2, 130);
+  if ( v4 )
+    return v4;
+  byte_1001264C = 1;
+  return 0;
+}
+
+
+
+=== sub_10001769 @ 0x10001769 ===
+int __thiscall sub_10001769(void *this)
+{
+  int i; // [esp+4h] [ebp-8h]
+  int v4; // [esp+8h] [ebp-4h]
+
+  for ( i = 0; i < 5; ++i )
+  {
+    v4 = sub_100017DF(this);
+    if ( !v4 )
+      break;
+  }
+  if ( v4 )
+    return 1;
+  if ( sub_100019F5(this) )
+    return 1;
+  sub_100019B5(this);
+  return 0;
+}
+
+
+
+=== sub_100017DF @ 0x100017DF ===
+int __thiscall sub_100017DF(_WORD *this)
+{
+  unsigned int i; // [esp+4h] [ebp-8h]
+
+  *(_BYTE *)this = 0;
+  if ( sub_10001B89(1, 2, 0) )
+    return 1;
+  for ( i = 0; i < 0x5D6; i += 2 )
+  {
+    *(_BYTE *)this = 1;
+    this[2] = word_1000E06C[i];
+    this[1] = word_1000E06E[i];
+    if ( sub_10001B89(0, 2, 0) )
+      return 1;
+    *(_BYTE *)this = 0;
+    if ( sub_10001B89(1, 2, 0) )
+      return 1;
+    if ( *((unsigned __int8 *)this + 6) != this[1] )
+      return 1;
+  }
+  return 0;
+}
+
+
+
+=== sub_10001B89 @ 0x10001B89 ===
+BOOL __thiscall sub_10001B89(_WORD *this, int a2, int a3, int a4)
+{
+  _DWORD InBuffer[5]; // [esp+8h] [ebp-1Ch] BYREF
+  int v7; // [esp+1Ch] [ebp-8h]
+  int v8; // [esp+20h] [ebp-4h] BYREF
+
+  memset(InBuffer, 0, 0x12u);
+  InBuffer[1] = a3;
+  InBuffer[2] = a4;
+  LOBYTE(InBuffer[3]) = 0;
+  BYTE1(InBuffer[3]) = *(_BYTE *)this;
+  HIWORD(InBuffer[3]) = this[1];
+  LOWORD(InBuffer[4]) = this[2];
+  InBuffer[0] |= 0x10000u;
+  if ( a2 )
+  {
+    if ( a2 != 1 )
+      return 1;
+    v8 = 1;
+    v7 = sub_100036E4(this + 3, (int)&v8, InBuffer);
+  }
+  else
+  {
+    v8 = 1;
+    v7 = sub_1000371A(this + 3, (int)&v8, InBuffer);
+  }
+  return v7 != 0;
+}
+
+
+
+=== NET_USBIO_API_Open @ 0x10001089 ===
+int __stdcall NET_USBIO_API_Open(int a1)
+{
+  int v2; // [esp+0h] [ebp-20h]
+  void *v3; // [esp+8h] [ebp-18h]
+  int v4; // [esp+10h] [ebp-10h]
+
+  if ( dword_100126F4[a1] )
+    return -1;
+  if ( a1 >= dword_10012648 )
+    return -1;
+  if ( !dword_10012648 )
+    return -1;
+  v3 = operator new(8u);
+  if ( v3 )
+    v2 = unknown_libname_2(v3);
+  else
+    v2 = 0;
+  dword_100126F4[a1] = v2;
+  v4 = sub_10001EE0(a1);
+  if ( v4 )
+  {
+    sub_10004EE0((LPVOID)dword_100126F4[a1]);
+    dword_100126F4[a1] = 0;
+  }
+  return v4;
+}
+
+
+
+=== NET_USBIO_API_SetCallback @ 0x10001022 ===
+int __stdcall NET_USBIO_API_SetCallback(int a1, int a2, int a3)
+{
+  if ( !dword_100126F4[a1] )
+    return -1;
+  *(_DWORD *)dword_100126F4[a1] = a2;
+  *(_DWORD *)(dword_100126F4[a1] + 4) = a3;
+  return 0;
+}
+
+
+
+=== sub_100018C1 @ 0x100018C1 ===
+BOOL __stdcall sub_100018C1(int a1, int a2)
+{
+  int v3; // [esp+0h] [ebp-28h]
+  void *v4; // [esp+8h] [ebp-20h]
+
+  v4 = operator new(0xD8u);
+  if ( v4 )
+    v3 = sub_1000292D(v4);
+  else
+    v3 = 0;
+  dword_100126F0 = v3;
+  if ( !v3 )
+    return 0;
+  if ( sub_10001C55() )
+    return 1;
+  if ( sub_10002CFE(a1, a2) )
+    return 1;
+  Sleep(1u);
+  sub_10002CD2(dword_100126F0);
+  Sleep(1u);
+  return (*(int (__thiscall **)(int))(*(_DWORD *)dword_100126F0 + 4))(dword_100126F0) != 0;
+}
+
+
+
+=== sub_10003DD3 @ 0x10003DD3 ===
+int __stdcall sub_10003DD3(void *lpOutBuffer)
+{
+  memset(lpOutBuffer, 0, 4u);
+  return sub_10003AF8(0x8094208C, 0, 0, lpOutBuffer, 4u, 0);
+}
+
+
+
+===  @ 0x100038A3 ===
+None
+
+
+=== sub_10002CA2 @ 0x10002CA2 ===
+int sub_10002CA2()
+{
+  _BYTE OutBuffer[4]; // [esp+4h] [ebp-8h] BYREF
+  int v2; // [esp+8h] [ebp-4h]
+
+  v2 = sub_10003DD3(OutBuffer);
+  if ( v2 )
+    Sleep(1u);
+  return v2;
+}
+
+
+
+=== sub_100029F0 @ 0x100029F0 ===
+int __thiscall sub_100029F0(int this)
+{
+  if ( !*(_DWORD *)(this + 52) )
+  {
+    sub_10002CA2();
+    sub_10004633(this + 56);
+    if ( (*(_DWORD *)(this + 4) & 3) == 1 )
+    {
+      *(_DWORD *)(this + 32) = 64;
+      *(_WORD *)(this + 12) = 3072;
+      *(_DWORD *)(this + 44) = 12 * *(_DWORD *)(this + 32) + 16;
+      *(_DWORD *)(this + 20) = *(unsigned __int16 *)(this + 12) * *(_DWORD *)(this + 32) + *(_DWORD *)(this + 44);
+    }
+    if ( !(unsigned __int8)sub_10004613(*(_DWORD *)(this + 20), *(_DWORD *)(this + 24)) )
+      return 1;
+    if ( !(unsigned __int8)sub_10004649(*(_DWORD *)(this + 28)) )
+      return 1;
+    *(_DWORD *)(this + 52) = 1;
+    if ( !byte_10012711 )
+    {
+      if ( sub_100028B0(this + 56) )
+        return 1;
+      byte_10012711 = 1;
+    }
+  }
+  return 0;
+}
+
+
+
+=== sub_10001F5C @ 0x10001F5C ===
+int __thiscall sub_10001F5C(void *this, int a2)
+{
+  sub_1000168B(&unk_10012698, this);
+  return 0;
+}
+
+
+
+=== sub_10001631 @ 0x10001689 ===
+int __thiscall sub_10001631(void *this, int a2)
+{
+  if ( sub_10001E80(&unk_10012650, this) )
+    return 1;
+  if ( sub_10003071(a2, dword_100126EC, &unk_1000E058) )
+    return 1;
+  dword_1000E068 = a2;
+  return 0;
+}
+
+
+
+=== NET_USBIO_API_Start @ 0x1000118C ===
+int __stdcall NET_USBIO_API_Start(int a1)
+{
+  if ( dword_100126F4[a1] )
+    return sub_10001F03((void *)dword_100126F4[a1], a1);
+  else
+    return -1;
+}
+
+
+
+=== sub_10001769 @ 0x10001769 ===
+int __thiscall sub_10001769(void *this)
+{
+  int i; // [esp+4h] [ebp-8h]
+  int v4; // [esp+8h] [ebp-4h]
+
+  for ( i = 0; i < 5; ++i )
+  {
+    v4 = sub_100017DF(this);
+    if ( !v4 )
+      break;
+  }
+  if ( v4 )
+    return 1;
+  if ( sub_100019F5(this) )
+    return 1;
+  sub_100019B5(this);
+  return 0;
+}
+
+
+
+=== sub_100042DB @ 0x100042DB ===
+int __thiscall sub_100042DB(_DWORD *this)
+{
+  int result; // eax
+  unsigned int v3; // [esp+4h] [ebp-Ch]
+  int v4; // [esp+8h] [ebp-8h]
+  _DWORD *v5; // [esp+Ch] [ebp-4h]
+  int v6; // [esp+Ch] [ebp-4h]
+  int v7; // [esp+Ch] [ebp-4h]
+
+  v3 = 0;
+  result = unknown_libname_6(this + 18);
+  if ( result )
+  {
+    result = (int)this;
+    this[32] = 0;
+    this[33] = 0;
+    while ( !this[30] )
+    {
+      result = (int)this;
+      if ( v3 > this[31] )
+        break;
+      while ( 1 )
+      {
+        result = sub_10004DD0(this + 18);
+        v5 = (_DWORD *)result;
+        if ( !result )
+          break;
+        (*(void (__thiscall **)(_DWORD *, int))(*this + 8))(this, result);
+        if ( v5[4] || !*v5 )
+        {
+          result = sub_10004E28(v5);
+          break;
+        }
+        sub_10003F44(v5);
+        if ( this[32] )
+          *(_DWORD *)(this[33] + 12) = v5;
+        else
+          this[32] = v5;
+        this[33] = v5;
+        v5[3] = 0;
+      }
+      if ( !this[32] )
+        break;
+      v6 = this[32];
+      v4 = sub_10004024(v6, 0xFFFFFFFF, 0);
+      if ( v4 )
+      {
+        if ( v4 != -536866789 )
+          ++v3;
+        (*(void (__thiscall **)(_DWORD *, int))(*this + 12))(this, v6);
+      }
+      else
+      {
+        v3 = 0;
+      }
+      this[32] = *(_DWORD *)(v6 + 12);
+      (*(void (__thiscall **)(_DWORD *, int))(*this + 4))(this, v6);
+      result = sub_10004E28(v6);
+    }
+    while ( 1 )
+    {
+      v7 = this[32];
+      if ( !v7 )
+        break;
+      sub_10004024(v7, 0xFFFFFFFF, 0);
+      this[32] = *(_DWORD *)(v7 + 12);
+      result = sub_10004E28(v7);
+    }
+  }
+  return result;
+}
+
+
+
+=== sub_10004B81 @ 0x10004B81 ===
+int __thiscall sub_10004B81(struct _RTL_CRITICAL_SECTION *this, int a2, unsigned int a3)
+{
+  _DWORD *v4; // [esp+4h] [ebp-40h]
+  unsigned int *v6; // [esp+18h] [ebp-2Ch]
+  HANDLE OwningThread; // [esp+24h] [ebp-20h]
+  unsigned int i; // [esp+28h] [ebp-1Ch]
+  int v9; // [esp+2Ch] [ebp-18h]
+  struct _RTL_CRITICAL_SECTION_DEBUG *v10; // [esp+30h] [ebp-14h]
+
+  v9 = 0;
+  EnterCriticalSection(this);
+  if ( !this[1].RecursionCount )
+  {
+    v6 = (unsigned int *)operator new(56 * a3 + 4);
+    if ( v6 )
+    {
+      *v6 = a3;
+      `eh vector constructor iterator'(v6 + 1, 0x38u, a3, sub_100049B0, sub_10004A3B);
+      v4 = v6 + 1;
+    }
+    else
+    {
+      v4 = 0;
+    }
+    this[1].RecursionCount = (LONG)v4;
+    if ( this[1].RecursionCount )
+    {
+      this[1].OwningThread = operator new(a3 * a2);
+      if ( this[1].OwningThread )
+      {
+        OwningThread = this[1].OwningThread;
+        for ( i = 0; i < a3; ++i )
+        {
+          v10 = (struct _RTL_CRITICAL_SECTION_DEBUG *)(56 * i + this[1].RecursionCount);
+          v10->Flags = (DWORD)OwningThread + a2 * i;
+          *(_DWORD *)&v10->CreatorBackTraceIndexHigh = a2;
+          v10->ProcessLocksList.Blink = (struct _LIST_ENTRY *)this[1].DebugInfo;
+          this[1].DebugInfo = v10;
+        }
+        this[1].LockCount = a3;
+        v9 = 1;
+      }
+      else
+      {
+        if ( this[1].RecursionCount )
+          sub_10004E70(3);
+        this[1].RecursionCount = 0;
+      }
+    }
+  }
+  LeaveCriticalSection(this);
+  return v9;
+}
+
+
+
+=== sub_100046B6 @ 0x100046B6 ===
+BOOL __thiscall sub_100046B6(volatile LONG *this)
+{
+  BOOL v3; // [esp+8h] [ebp-8h]
+  HANDLE hHandle; // [esp+Ch] [ebp-4h]
+
+  v3 = 1;
+  hHandle = (HANDLE)InterlockedExchange(this + 28, 0);
+  if ( hHandle )
+  {
+    *((_DWORD *)this + 30) = 1;
+    (*(void (__thiscall **)(volatile LONG *))(*this + 24))(this);
+    v3 = WaitForSingleObject(hHandle, 0xFFFFFFFF) == 0;
+    CloseHandle(hHandle);
+  }
+  return v3;
+}
+
+
+
+=== sub_10002B04 @ 0x10002B04 ===
+void __thiscall sub_10002B04(volatile LONG *this)
+{
+  byte_10012711 = 0;
+  if ( !sub_100046B6(this + 14) )
+    Sleep(1u);
+}
+
+
+
+=== sub_10002EC0 @ 0x10002EC0 ===
+void *__thiscall sub_10002EC0(void *this, char a2)
+{
+  sub_1000299C(this);
+  if ( (a2 & 1) != 0 )
+    sub_10004EE0(this);
+  return this;
+}
+
+
+
+=== sub_10002CFE @ 0x10002CFE ===
+int __thiscall sub_10002CFE(_DWORD *this, int a2, int a3)
+{
+  int v3; // edx
+  _DWORD *v4; // edx
+  int result; // eax
+  unsigned int i; // [esp+8h] [ebp-310h]
+  _BYTE OutBuffer[4]; // [esp+Ch] [ebp-30Ch] BYREF
+  unsigned int v9; // [esp+10h] [ebp-308h]
+  _BYTE v10[512]; // [esp+114h] [ebp-204h] BYREF
+  int v11; // [esp+314h] [ebp-4h]
+
+  v11 = (unsigned __int8)sub_10003CFB(a2, a3, dword_100126EC, &unk_1000E058);
+  if ( v11 )
+    return v11;
+  v11 = sub_100037F1(OutBuffer);
+  if ( v11 )
+  {
+    sub_10003D6D(this[12], this);
+    return v11;
+  }
+  for ( i = 0; i < v9; ++i )
+  {
+    v3 = 16 * i;
+    if ( (unsigned __int8)v10[16 * i + 10] == a3 )
+    {
+      v4 = &v10[16 * i];
+      this[1] = *v4;
+      this[2] = v4[1];
+      this[3] = v4[2];
+      v3 = v4[3];
+      this[4] = v3;
+      break;
+    }
+  }
+  switch ( this[1] )
+  {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+      sub_10002BEC(this);
+      return v11;
+    default:
+      sub_10003D6D(this[12], v3);
+      result = -536866816;
+      break;
+  }
+  return result;
+}
+
+
+
+=== sub_10002CD2 @ 0x10002CD2 ===
+int __thiscall sub_10002CD2(_DWORD *this)
+{
+  int v2; // [esp+4h] [ebp-4h]
+
+  v2 = sub_10003D8F(this[12], this);
+  if ( v2 )
+    Sleep(1u);
+  return v2;
+}
+
+
+
+=== sub_10004613 @ 0x10004613 ===
+int __thiscall sub_10004613(struct _RTL_CRITICAL_SECTION *this, int a2, unsigned int a3)
+{
+  return sub_10004B81(this + 3, a2, a3);
+}
+
+
+
+=== sub_10004649 @ 0x10004649 ===
+BOOL __thiscall sub_10004649(unsigned int *this, unsigned int a2)
+{
+  int v4; // [esp+4h] [ebp-4h]
+
+  v4 = 0;
+  if ( !this[28] )
+  {
+    this[30] = 0;
+    this[31] = a2;
+    this[28] = _beginthreadex(0, 0, sub_10004720, this, 0, this + 29);
+    return this[28] != 0;
+  }
+  return v4;
+}
+
+
+
+=== sub_10001C55 @ 0x10001C55 ===
+BOOL sub_10001C55()
+{
+  if ( !dword_100126FC )
+  {
+    dword_100126FC = (int)operator new(0xA8C00u);
+    if ( !dword_100126FC )
+      return 1;
+  }
+  if ( !Src )
+  {
+    Src = operator new(0x54600u);
+    if ( !Src )
+      return 1;
+  }
+  if ( !dword_1001270C )
+  {
+    dword_1001270C = operator new(0x54600u);
+    if ( !dword_1001270C )
+      return 1;
+  }
+  if ( !dword_10012700 )
+  {
+    dword_10012700 = operator new(0x54600u);
+    if ( !dword_10012700 )
+      return 1;
+  }
+  if ( dword_10012704 )
+    return 0;
+  dword_10012704 = operator new(0x54600u);
+  return !dword_10012704;
+}
+
+
+
+=== sub_100028B0 @ 0x100028B0 ===
+BOOL __thiscall sub_100028B0(void *this)
+{
+  DWORD ThreadId; // [esp+4h] [ebp-4h] BYREF
+
+  hObject = CreateThread(0, 0, StartAddress, this, 0, &ThreadId);
+  return hObject == 0;
+}
+
+
+
+=== sub_10004DD0 @ 0x10004DD0 ===
+PRTL_CRITICAL_SECTION_DEBUG __thiscall sub_10004DD0(struct _RTL_CRITICAL_SECTION *this)
+{
+  PRTL_CRITICAL_SECTION_DEBUG DebugInfo; // [esp+4h] [ebp-4h]
+
+  EnterCriticalSection(this);
+  DebugInfo = this[1].DebugInfo;
+  if ( DebugInfo )
+  {
+    this[1].DebugInfo = (PRTL_CRITICAL_SECTION_DEBUG)DebugInfo->ProcessLocksList.Blink;
+    DebugInfo->ProcessLocksList.Blink = 0;
+    InterlockedDecrement(&this[1].LockCount);
+  }
+  LeaveCriticalSection(this);
+  return DebugInfo;
+}
+
+
+
+=== sub_10004024 @ 0x10004024 ===
+DWORD __thiscall sub_10004024(HANDLE *this, int a2, DWORD dwMilliseconds, void *a4)
+{
+  HANDLE Handles[2]; // [esp+10h] [ebp-10h] BYREF
+  DWORD v7; // [esp+18h] [ebp-8h]
+
+  if ( *(_DWORD *)(a2 + 8) != 997 )
+    return *(_DWORD *)(a2 + 8);
+  Handles[0] = *(HANDLE *)(a2 + 48);
+  Handles[1] = a4;
+  v7 = WaitForMultipleObjects((a4 != 0) + 1, Handles, 0, dwMilliseconds);
+  if ( v7 )
+  {
+    if ( v7 == 1 )
+    {
+      return -536866786;
+    }
+    else if ( v7 == 258 )
+    {
+      return -536866804;
+    }
+    else
+    {
+      return v7;
+    }
+  }
+  else
+  {
+    if ( GetOverlappedResult(this[1], (LPOVERLAPPED)(a2 + 32), (LPDWORD)(a2 + 4), 0) )
+      *(_DWORD *)(a2 + 8) = 0;
+    else
+      *(_DWORD *)(a2 + 8) = GetLastError();
+    return *(_DWORD *)(a2 + 8);
+  }
+}
+
+
+
+=== sub_10003F44 @ 0x10003F44 ===
+BOOL __thiscall sub_10003F44(HANDLE *this, int a2)
+{
+  void *v2; // eax
+  DWORD v4; // [esp-Ch] [ebp-14h]
+  BOOL File; // [esp+4h] [ebp-4h]
+
+  v4 = *(_DWORD *)a2;
+  v2 = (void *)unknown_libname_4(a2);
+  File = ReadFile(this[1], v2, v4, (LPDWORD)(a2 + 4), (LPOVERLAPPED)(a2 + 32));
+  if ( File )
+  {
+    *(_DWORD *)(a2 + 8) = 0;
+  }
+  else
+  {
+    *(_DWORD *)(a2 + 8) = GetLastError();
+    return *(_DWORD *)(a2 + 8) == 997;
+  }
+  return File;
+}
+
+
+
+=== sub_100019F5 @ 0x100019F5 ===
+BOOL __thiscall sub_100019F5(_DWORD *this)
+{
+  _DWORD *v3; // [esp+8h] [ebp-118h]
+  int i; // [esp+Ch] [ebp-114h]
+  int j; // [esp+10h] [ebp-110h]
+  _DWORD InBuffer[65]; // [esp+14h] [ebp-10Ch] BYREF
+  int v7; // [esp+118h] [ebp-8h]
+  int v8; // [esp+11Ch] [ebp-4h]
+
+  memset(this + 3, 0, 0x40u);
+  this[3] = 1;
+  for ( i = 0; i < 4; ++i )
+  {
+    this[4 * i + 6] = 0x10000;
+    this[4 * i + 4] = i;
+  }
+  this[19] = 0;
+  memset(InBuffer, 0, sizeof(InBuffer));
+  LOWORD(InBuffer[0]) = *((_WORD *)this + 38);
+  v8 = 0;
+  for ( j = 0; j < 4; ++j )
+  {
+    if ( this[4 * j + 3] )
+    {
+      v3 = &InBuffer[2 * v8 + 1];
+      *(_WORD *)v3 = this[4 * j + 4];
+      *((_WORD *)v3 + 1) = 0;
+      v3[1] = 786432;
+      ++v8;
+    }
+  }
+  HIWORD(InBuffer[0]) = v8;
+  v7 = sub_10003750(InBuffer);
+  return v7 && v7 != -536866811;
+}
+
+
+
+=== sub_100019B5 @ 0x100019B5 ===
+BOOL sub_100019B5()
+{
+  _WORD InBuffer[2]; // [esp+4h] [ebp-Ch] BYREF
+  int v2; // [esp+8h] [ebp-8h]
+  int v3; // [esp+Ch] [ebp-4h]
+
+  InBuffer[0] = 0;
+  InBuffer[1] = 5;
+  v2 = 0x10000;
+  v3 = sub_10003835(InBuffer);
+  return v3 != 0;
+}
+
+
+
+=== sub_10001EE0 @ 0x10001EE0 ===
+int __stdcall sub_10001EE0(int a1)
+{
+  return sub_10001631(&unk_10012698, a1);
+}
+
+
+
+=== sub_10001E80 @ 0x10001E80 ===
+BOOL __thiscall sub_10001E80(_DWORD *this)
+{
+  return this[1] != 0;
+}
+
+
+
+=== sub_10003071 @ 0x10003071 ===
+int __thiscall sub_10003071(_DWORD *this, int a2, int a3, int a4)
+{
+  int OutBuffer; // [esp+4h] [ebp-68h] BYREF
+  int v7; // [esp+Ch] [ebp-60h]
+  char Buffer[80]; // [esp+10h] [ebp-5Ch] BYREF
+  LPCSTR lpFileName; // [esp+60h] [ebp-Ch]
+  HANDLE FileA; // [esp+64h] [ebp-8h]
+  DWORD LastError; // [esp+68h] [ebp-4h]
+
+  if ( this[1] )
+    return -536866553;
+  if ( a3 )
+  {
+    LastError = sub_10003273(a2, a3, a4);
+    if ( LastError )
+      return LastError;
+    lpFileName = (LPCSTR)sub_100033E1(this);
+  }
+  else
+  {
+    sprintf(Buffer, "\\\\.\\USBIO_Device%d", a2);
+    lpFileName = Buffer;
+  }
+  FileA = CreateFileA(lpFileName, 0xC0000000, 3u, 0, 3u, 0x40000000u, 0);
+  if ( FileA == (HANDLE)-1 )
+  {
+    LastError = GetLastError();
+    if ( LastError == 2 )
+      return -536866560;
+  }
+  else
+  {
+    this[1] = FileA;
+    this[6] = CreateEventA(0, 0, 0, 0);
+    if ( this[6] )
+    {
+      LastError = sub_10003402(&OutBuffer);
+      if ( LastError )
+      {
+        sub_100031FE(this);
+      }
+      else
+      {
+        this[13] = (v7 & 0x10) != 0;
+        this[14] = (v7 & 0x20) != 0;
+        this[15] = (v7 & 0x100) != 0;
+        if ( (OutBuffer & 0xFF00) == 0x200 && (unsigned __int8)OutBuffer >= 0x30u )
+        {
+          return 0;
+        }
+        else
+        {
+          LastError = -536866788;
+          sub_100031FE(this);
+        }
+      }
+    }
+    else
+    {
+      LastError = -536870656;
+      sub_100031FE(this);
+    }
+  }
+  return LastError;
+}
+
+
+
+=== sub_10004EE0 @ 0x10004EE0 ===
+int __cdecl sub_10004EE0(LPVOID lpMem)
+{
+  return sub_10005C29(lpMem);
+}
+
+
+
+=== sub_1000299C @ 0x1000299C ===
+int __thiscall sub_1000299C(_DWORD *this)
+{
+  *this = &off_1000C154;
+  sub_1000234A(this + 14);
+  return sub_10002BC4(this);
+}
+
+
+
+=== sub_100028B0 @ 0x100028B0 ===
+BOOL __thiscall sub_100028B0(void *this)
+{
+  DWORD ThreadId; // [esp+4h] [ebp-4h] BYREF
+
+  hObject = CreateThread(0, 0, StartAddress, this, 0, &ThreadId);
+  return hObject == 0;
+}
+
+
+
+=== sub_10004633 @ 0x10004633 ===
+int __thiscall sub_10004633(char *this)
+{
+  return sub_10004D35(this + 72, this);
+}
+
+
+
+=== sub_10002EC0 @ 0x10002EC0 ===
+void *__thiscall sub_10002EC0(void *this, char a2)
+{
+  sub_1000299C(this);
+  if ( (a2 & 1) != 0 )
+    sub_10004EE0(this);
+  return this;
+}
+
+
+
+=== unknown_libname_2 @ 0x10001EB8 ===
+// Microsoft VisualC 2-14/net runtime
+void *__thiscall unknown_libname_2(void *this)
+{
+  return this;
+}
+
+
+
+=== sub_10003AF8 @ 0x10003AF8 ===
+DWORD __thiscall sub_10003AF8(
+        int this,
+        DWORD dwIoControlCode,
+        LPVOID lpInBuffer,
+        DWORD nInBufferSize,
+        LPVOID lpOutBuffer,
+        DWORD nOutBufferSize,
+        DWORD *a7)
+{
+  DWORD LastError; // [esp+8h] [ebp-8h]
+  DWORD BytesReturned; // [esp+Ch] [ebp-4h] BYREF
+
+  BytesReturned = 0;
+  if ( !*(_DWORD *)(this + 4) )
+    return -536866558;
+  EnterCriticalSection((LPCRITICAL_SECTION)(this + 28));
+  if ( DeviceIoControl(
+         *(HANDLE *)(this + 4),
+         dwIoControlCode,
+         lpInBuffer,
+         nInBufferSize,
+         lpOutBuffer,
+         nOutBufferSize,
+         &BytesReturned,
+         (LPOVERLAPPED)(this + 8)) )
+  {
+    LastError = 0;
+  }
+  else
+  {
+    LastError = GetLastError();
+    if ( LastError == 997 )
+    {
+      if ( GetOverlappedResult(*(HANDLE *)(this + 4), (LPOVERLAPPED)(this + 8), &BytesReturned, 1) )
+        LastError = 0;
+      else
+        LastError = GetLastError();
+    }
+  }
+  LeaveCriticalSection((LPCRITICAL_SECTION)(this + 28));
+  if ( a7 )
+    *a7 = BytesReturned;
+  return LastError;
+}
+
+
+
+=== sub_10003D6D @ 0x10003D6D ===
+DWORD __thiscall sub_10003D6D(void *this)
+{
+  return sub_10003AF8((int)this, 0x8094207C, 0, 0, 0, 0, 0);
+}
+
+
+
+=== sub_100036E4 @ 0x100036E4 ===
+DWORD __thiscall sub_100036E4(void *this, LPVOID lpOutBuffer, DWORD *a3, LPVOID lpInBuffer)
+{
+  return sub_10003AF8((int)this, 0x80942032, lpInBuffer, 0x12u, lpOutBuffer, *a3, a3);
+}
+
+
+
+=== sub_1000371A @ 0x1000371A ===
+DWORD __thiscall sub_1000371A(void *this, LPVOID lpOutBuffer, DWORD *a3, LPVOID lpInBuffer)
+{
+  return sub_10003AF8((int)this, 0x80942035, lpInBuffer, 0x12u, lpOutBuffer, *a3, a3);
+}
+
+
+
+=== sub_10004720 @ 0x10004720 ===
+unsigned int __stdcall sub_10004720(void *a1)
+{
+  HANDLE CurrentThread; // eax
+  int v3; // [esp-4h] [ebp-Ch]
+  HANDLE hObject; // [esp+4h] [ebp-4h]
+
+  v3 = *((_DWORD *)a1 + 17);
+  CurrentThread = GetCurrentThread();
+  SetThreadPriority(CurrentThread, v3);
+  (*(void (__thiscall **)(void *))(*(_DWORD *)a1 + 20))(a1);
+  (*(void (__thiscall **)(void *))(*(_DWORD *)a1 + 16))(a1);
+  hObject = (HANDLE)InterlockedExchange((volatile LONG *)a1 + 28, 0);
+  if ( hObject )
+    CloseHandle(hObject);
+  return 0;
+}
+
+
+
+=== sub_10003D8F @ 0x10003D8F ===
+DWORD __thiscall sub_10003D8F(void *this)
+{
+  return sub_10003AF8((int)this, 0x80942080, 0, 0, 0, 0, 0);
+}
+
+
+
+=== sub_10003835 @ 0x10003835 ===
+DWORD __thiscall sub_10003835(void *this, LPVOID lpInBuffer)
+{
+  return sub_10003AF8((int)this, 0x8094202C, lpInBuffer, 8u, 0, 0, 0);
+}
+
+
+
+=== sub_10003750 @ 0x10003750 ===
+DWORD __thiscall sub_10003750(void *this, LPVOID lpInBuffer)
+{
+  return sub_10003AF8((int)this, 0x80942024, lpInBuffer, 0x104u, 0, 0, 0);
+}
+
+
+
+=== sub_10002BEC @ 0x10002BEC ===
+int __thiscall sub_10002BEC(int this)
+{
+  int result; // eax
+  int v2; // [esp+0h] [ebp-8h]
+
+  if ( sub_10003484(&unk_10012650) )
+  {
+    *(_DWORD *)(this + 20) = 1024;
+    *(_DWORD *)(this + 32) = 64;
+  }
+  else
+  {
+    *(_DWORD *)(this + 20) = 64;
+    *(_DWORD *)(this + 32) = 32;
+  }
+  *(_DWORD *)(this + 24) = 3;
+  *(_DWORD *)(this + 28) = 5;
+  result = this;
+  v2 = *(_DWORD *)(this + 4);
+  switch ( v2 )
+  {
+    case 1:
+      result = this;
+      *(_DWORD *)(this + 20) = (*(unsigned __int16 *)(this + 12) + 12) * *(_DWORD *)(this + 32) + 16;
+      break;
+    case 2:
+      result = this;
+      *(_DWORD *)(this + 20) = *(unsigned __int16 *)(this + 12);
+      break;
+    case 3:
+      result = this;
+      *(_DWORD *)(this + 20) = *(unsigned __int16 *)(this + 12);
+      break;
+  }
+  return result;
+}
+
+
+
+=== sub_10003402 @ 0x10003402 ===
+DWORD __thiscall sub_10003402(void *this, LPVOID lpOutBuffer)
+{
+  return sub_10003AF8((int)this, 0x8094206C, 0, 0, lpOutBuffer, 0xCu, 0);
+}
+
+
+
+=== sub_100031FE @ 0x100031FE ===
+BOOL __thiscall sub_100031FE(HANDLE *this)
+{
+  BOOL result; // eax
+
+  result = (BOOL)this;
+  if ( this[1] )
+  {
+    CloseHandle(this[1]);
+    result = (BOOL)this;
+    this[1] = 0;
+  }
+  if ( this[6] )
+  {
+    result = CloseHandle(this[6]);
+    this[6] = 0;
+  }
+  if ( this[16] )
+  {
+    sub_10004EE0(this[16]);
+    result = (BOOL)this;
+    this[16] = 0;
+  }
+  return result;
+}
+
+
+
+=== sub_10003273 @ 0x10003273 ===
+DWORD __thiscall sub_10003273(LPVOID *this, int a2, int a3, int a4)
+{
+  DWORD result; // eax
+  size_t Size; // [esp+Ch] [ebp-28h] BYREF
+  int v7; // [esp+10h] [ebp-24h]
+  DWORD LastError; // [esp+14h] [ebp-20h]
+  _DWORD v9[7]; // [esp+18h] [ebp-1Ch] BYREF
+
+  if ( !a3 || !a4 )
+    return -536866555;
+  if ( !sub_10004885(&unk_10012720) )
+    return -536866554;
+  if ( this[16] )
+  {
+    sub_10004EE0(this[16]);
+    this[16] = 0;
+  }
+  memset(v9, 0, sizeof(v9));
+  v9[0] = 28;
+  v7 = dword_1001272C(a3, 0, a4, a2, v9);
+  if ( v7 )
+  {
+    Size = 0;
+    dword_10012730(a3, v9, 0, 0, &Size, 0);
+    if ( Size )
+    {
+      this[16] = operator new(Size);
+      if ( this[16] )
+      {
+        memset(this[16], 0, Size);
+        *(_DWORD *)this[16] = 5;
+        v7 = dword_10012730(a3, v9, this[16], Size, &Size, 0);
+        if ( v7 )
+        {
+          return 0;
+        }
+        else
+        {
+          result = GetLastError();
+          LastError = result;
+        }
+      }
+      else
+      {
+        return -536870656;
+      }
+    }
+    else
+    {
+      return -536866816;
+    }
+  }
+  else
+  {
+    LastError = GetLastError();
+    if ( LastError == 259 )
+      return -536866556;
+    return LastError;
+  }
+  return result;
+}
+
+
+
+=== sub_100033E1 @ 0x100033E1 ===
+int __thiscall sub_100033E1(_DWORD *this)
+{
+  if ( this[16] )
+    return this[16] + 4;
+  else
+    return 0;
+}
+
+
+
+=== sub_10004D35 @ 0x10004D35 ===
+void __thiscall sub_10004D35(struct _RTL_CRITICAL_SECTION *this)
+{
+  EnterCriticalSection(this);
+  if ( this[1].RecursionCount )
+  {
+    sub_10004E70(3);
+    this[1].RecursionCount = 0;
+  }
+  if ( this[1].OwningThread )
+  {
+    sub_10004EE0(this[1].OwningThread);
+    this[1].OwningThread = 0;
+  }
+  this[1].DebugInfo = 0;
+  this[1].LockCount = 0;
+  LeaveCriticalSection(this);
+}
+
+
+
+=== sub_10002BC4 @ 0x10002BC4 ===
+BOOL __thiscall sub_10002BC4(HANDLE **this)
+{
+  BOOL result; // eax
+
+  result = (BOOL)this;
+  *this = (HANDLE *)&off_1000C164;
+  if ( this[12] )
+    return sub_100031FE(this[12]);
+  return result;
+}
+
+
+
+=== sub_1000234A @ 0x1000234A ===
+int __thiscall sub_1000234A(_DWORD *this)
+{
+  *this = off_1000C138;
+  return sub_100042BF(this, this);
+}
+
+
+
+=== sub_10005725 @ 0x10005725 ===
+void __noreturn sub_10005725()
+{
+  _amsg_exit(0x19u);
+}
+
+
+
+=== DllEntryPoint @ 0x10005807 ===
+BOOL __stdcall DllEntryPoint(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
+{
+  bool v4; // zf
+  BOOL v6; // eax
+  BOOL fdwReasona; // [esp+18h] [ebp+Ch]
+
+  if ( fdwReason )
+  {
+    if ( fdwReason != 1 && fdwReason != 2 )
+      goto LABEL_10;
+    if ( dword_10013E44 && !dword_10013E44(hinstDLL, fdwReason, lpReserved) )
+      return 0;
+    v4 = _CRT_INIT(hinstDLL, fdwReason, lpReserved) == 0;
+  }
+  else
+  {
+    v4 = dword_10012738 == 0;
+  }
+  if ( v4 )
+    return 0;
+LABEL_10:
+  v6 = DllMain(hinstDLL, fdwReason, lpReserved);
+  fdwReasona = v6;
+  if ( fdwReason != 1 )
+  {
+LABEL_13:
+    if ( !fdwReason || fdwReason == 3 )
+    {
+      if ( !_CRT_INIT(hinstDLL, fdwReason, lpReserved) )
+        fdwReasona = 0;
+      if ( fdwReasona )
+      {
+        if ( dword_10013E44 )
+          return dword_10013E44(hinstDLL, fdwReason, lpReserved);
+      }
+    }
+    return fdwReasona;
+  }
+  if ( !v6 )
+  {
+    _CRT_INIT(hinstDLL, 0, lpReserved);
+    goto LABEL_13;
+  }
+  return fdwReasona;
+}
+
+
+
+=== DllEntryPoint @ 0x10005807 ===
+BOOL __stdcall DllEntryPoint(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
+{
+  bool v4; // zf
+  BOOL v6; // eax
+  BOOL fdwReasona; // [esp+18h] [ebp+Ch]
+
+  if ( fdwReason )
+  {
+    if ( fdwReason != 1 && fdwReason != 2 )
+      goto LABEL_10;
+    if ( dword_10013E44 && !dword_10013E44(hinstDLL, fdwReason, lpReserved) )
+      return 0;
+    v4 = _CRT_INIT(hinstDLL, fdwReason, lpReserved) == 0;
+  }
+  else
+  {
+    v4 = dword_10012738 == 0;
+  }
+  if ( v4 )
+    return 0;
+LABEL_10:
+  v6 = DllMain(hinstDLL, fdwReason, lpReserved);
+  fdwReasona = v6;
+  if ( fdwReason != 1 )
+  {
+LABEL_13:
+    if ( !fdwReason || fdwReason == 3 )
+    {
+      if ( !_CRT_INIT(hinstDLL, fdwReason, lpReserved) )
+        fdwReasona = 0;
+      if ( fdwReasona )
+      {
+        if ( dword_10013E44 )
+          return dword_10013E44(hinstDLL, fdwReason, lpReserved);
+      }
+    }
+    return fdwReasona;
+  }
+  if ( !v6 )
+  {
+    _CRT_INIT(hinstDLL, 0, lpReserved);
+    goto LABEL_13;
+  }
+  return fdwReasona;
+}
+
+
+
+=== sub_10003484 @ 0x10003484 ===
+BOOL sub_10003484()
+{
+  _DWORD OutBuffer[4]; // [esp+4h] [ebp-14h] BYREF
+
+  memset(OutBuffer, 0, sizeof(OutBuffer));
+  return !sub_100034C8(OutBuffer) && (OutBuffer[0] & 0x100000) != 0;
+}
+
+
+
+=== sub_100034C8 @ 0x100034C8 ===
+DWORD __thiscall sub_100034C8(void *this, LPVOID lpOutBuffer)
+{
+  return sub_10003AF8((int)this, 0x80942068, 0, 0, lpOutBuffer, 0x10u, 0);
+}
+
+
+
+=== _memcpy @ 0x10005490 ===
+void *__cdecl memcpy(void *a1, const void *Src, size_t Size)
+{
+  char *v3; // esi
+  char *v4; // edi
+  size_t v5; // ecx
+  void *result; // eax
+  char *v7; // esi
+  char *v8; // edi
+  size_t v9; // ecx
+
+  v3 = (char *)Src;
+  v4 = (char *)a1;
+  if ( a1 > Src && a1 < (char *)Src + Size )
+  {
+    v7 = (char *)Src + Size - 4;
+    v8 = (char *)a1 + Size - 4;
+    if ( ((unsigned __int8)v8 & 3) == 0 )
+    {
+      v9 = Size >> 2;
+      if ( Size >> 2 >= 8 )
+      {
+        while ( v9 )
+        {
+          *(_DWORD *)v8 = *(_DWORD *)v7;
+          v7 -= 4;
+          v8 -= 4;
+          --v9;
+        }
+        switch ( Size & 3 )
+        {
+          case 0u:
+            goto TrailDown0;
+          case 1u:
+            goto TrailDown1;
+          case 2u:
+            goto TrailDown2;
+          case 3u:
+            goto TrailDown3;
+        }
+      }
+      switch ( Size & 3 )
+      {
+        case 0u:
+          goto TrailDown0;
+        case 1u:
+          goto TrailDown1;
+        case 2u:
+          goto TrailDown2;
+        case 3u:
+          goto TrailDown3;
+      }
+    }
+    switch ( Size )
+    {
+      case 0u:
+TrailDown0:
+        result = a1;
+        break;
+      case 1u:
+TrailDown1:
+        v8[3] = v7[3];
+        result = a1;
+        break;
+      case 2u:
+TrailDown2:
+        v8[3] = v7[3];
+        v8[2] = v7[2];
+        result = a1;
+        break;
+      case 3u:
+TrailDown3:
+        v8[3] = v7[3];
+        v8[2] = v7[2];
+        v8[1] = v7[1];
+        result = a1;
+        break;
+      default:
+        __asm { jmp     dword ptr ds:(loc_100055D4+4)[eax*4] }
+        return result;
+    }
+  }
+  else
+  {
+    if ( ((unsigned __int8)a1 & 3) != 0 )
+    {
+      if ( Size >= 4 )
+        __asm { jmp     dword ptr ds:(loc_1000544C+4)[eax*4] }
+      __asm { jmp     dword ptr ds:TrailUp0[ecx*4]; jumptable 10005425 case 0 }
+    }
+    v5 = Size >> 2;
+    switch ( v5 )
+    {
+      case 0u:
+        goto UnwindUp0;
+      case 1u:
+        goto UnwindUp1;
+      case 2u:
+        goto UnwindUp2;
+      case 3u:
+        goto UnwindUp3;
+      case 4u:
+        goto UnwindUp4;
+      case 5u:
+        goto UnwindUp5;
+      case 6u:
+        goto UnwindUp6;
+      case 7u:
+        *((_DWORD *)a1 + v5 - 7) = *((_DWORD *)Src + v5 - 7);
+UnwindUp6:
+        *((_DWORD *)a1 + v5 - 6) = *((_DWORD *)Src + v5 - 6);
+UnwindUp5:
+        *((_DWORD *)a1 + v5 - 5) = *((_DWORD *)Src + v5 - 5);
+UnwindUp4:
+        *((_DWORD *)a1 + v5 - 4) = *((_DWORD *)Src + v5 - 4);
+UnwindUp3:
+        *((_DWORD *)a1 + v5 - 3) = *((_DWORD *)Src + v5 - 3);
+UnwindUp2:
+        *((_DWORD *)a1 + v5 - 2) = *((_DWORD *)Src + v5 - 2);
+UnwindUp1:
+        *((_DWORD *)a1 + v5 - 1) = *((_DWORD *)Src + v5 - 1);
+        v3 = (char *)Src + 4 * v5;
+        v4 = (char *)a1 + 4 * v5;
+UnwindUp0:
+        switch ( Size & 3 )
+        {
+          case 0u:
+            goto TrailUp0;
+          case 1u:
+            goto TrailUp1;
+          case 2u:
+            goto TrailUp2;
+          case 3u:
+            goto TrailUp3;
+        }
+      default:
+        qmemcpy(a1, Src, 4 * v5);
+        v3 = (char *)Src + 4 * v5;
+        v4 = (char *)a1 + 4 * v5;
+        switch ( Size & 3 )
+        {
+          case 0u:
+TrailUp0:
+            result = a1;
+            break;
+          case 1u:
+TrailUp1:
+            *v4 = *v3;
+            result = a1;
+            break;
+          case 2u:
+TrailUp2:
+            *v4 = *v3;
+            v4[1] = v3[1];
+            result = a1;
+            break;
+          case 3u:
+TrailUp3:
+            *v4 = *v3;
+            v4[1] = v3[1];
+            v4[2] = v3[2];
+            result = a1;
+            break;
+        }
+        break;
+    }
+  }
+  return result;
+}
+
+
+
+=== sub_10002EC0 @ 0x10002EC0 ===
+void *__thiscall sub_10002EC0(void *this, char a2)
+{
+  sub_1000299C(this);
+  if ( (a2 & 1) != 0 )
+    sub_10004EE0(this);
+  return this;
+}
+
+
+
+=== sub_100029F0 @ 0x100029F0 ===
+int __thiscall sub_100029F0(int this)
+{
+  if ( !*(_DWORD *)(this + 52) )
+  {
+    sub_10002CA2();
+    sub_10004633(this + 56);
+    if ( (*(_DWORD *)(this + 4) & 3) == 1 )
+    {
+      *(_DWORD *)(this + 32) = 64;
+      *(_WORD *)(this + 12) = 3072;
+      *(_DWORD *)(this + 44) = 12 * *(_DWORD *)(this + 32) + 16;
+      *(_DWORD *)(this + 20) = *(unsigned __int16 *)(this + 12) * *(_DWORD *)(this + 32) + *(_DWORD *)(this + 44);
+    }
+    if ( !(unsigned __int8)sub_10004613(*(_DWORD *)(this + 20), *(_DWORD *)(this + 24)) )
+      return 1;
+    if ( !(unsigned __int8)sub_10004649(*(_DWORD *)(this + 28)) )
+      return 1;
+    *(_DWORD *)(this + 52) = 1;
+    if ( !byte_10012711 )
+    {
+      if ( sub_100028B0(this + 56) )
+        return 1;
+      byte_10012711 = 1;
+    }
+  }
+  return 0;
+}
+
+
+
+=== sub_10002B04 @ 0x10002B04 ===
+void __thiscall sub_10002B04(volatile LONG *this)
+{
+  byte_10012711 = 0;
+  if ( !sub_100046B6(this + 14) )
+    Sleep(1u);
+}
+
+
+
+=== sub_10002B2D @ 0x10002B2D ===
+void sub_10002B2D()
+{
+  Sleep(1u);
+}
+
+
+
+=== sub_10002EF0 @ 0x10002EF0 ===
+HANDLE **__thiscall sub_10002EF0(HANDLE **this, char a2)
+{
+  sub_10002BC4(this);
+  if ( (a2 & 1) != 0 )
+    sub_10004EE0(this);
+  return this;
+}
+
+
+
+=== sub_10005725 @ 0x10005725 ===
+void __noreturn sub_10005725()
+{
+  _amsg_exit(0x19u);
+}
+
+
+
+=== sub_10005725 @ 0x10005725 ===
+void __noreturn sub_10005725()
+{
+  _amsg_exit(0x19u);
+}
+
+
+
+=== sub_10005725 @ 0x10005725 ===
+void __noreturn sub_10005725()
+{
+  _amsg_exit(0x19u);
+}
+
+
+
+=== sub_10003C90 @ 0x10003C90 ===
+void *__thiscall sub_10003C90(void *this, char a2)
+{
+  sub_10002FE5(this);
+  if ( (a2 & 1) != 0 )
+    sub_10004EE0(this);
+  return this;
+}
+
+
+
+=== sub_10004720 @ 0x10004720 ===
+unsigned int __stdcall sub_10004720(void *a1)
+{
+  HANDLE CurrentThread; // eax
+  int v3; // [esp-4h] [ebp-Ch]
+  HANDLE hObject; // [esp+4h] [ebp-4h]
+
+  v3 = *((_DWORD *)a1 + 17);
+  CurrentThread = GetCurrentThread();
+  SetThreadPriority(CurrentThread, v3);
+  (*(void (__thiscall **)(void *))(*(_DWORD *)a1 + 20))(a1);
+  (*(void (__thiscall **)(void *))(*(_DWORD *)a1 + 16))(a1);
+  hObject = (HANDLE)InterlockedExchange((volatile LONG *)a1 + 28, 0);
+  if ( hObject )
+    CloseHandle(hObject);
+  return 0;
+}
+
+=== Vtable at 0x1000C138 ===
+  [0] offset +0: 0x10002E50 = sub_10002E50
+  [1] offset +4: 0x1000256B = sub_1000256B
+  [2] offset +8: 0x10002373 = sub_10002373
+  [3] offset +12: 0x10002366 = unknown_libname_3
+  [4] offset +16: 0x10002916 = sub_10002916
+  [5] offset +20: 0x100042DB = sub_100042DB
+  [6] offset +24: 0x100028ED = sub_100028ED
+  [7] offset +28: 0x10002EC0 = sub_10002EC0
+  [8] offset +32: 0x100029F0 = sub_100029F0
+  [9] offset +36: 0x10002B04 = sub_10002B04
+  [10] offset +40: 0x10002B2D = sub_10002B2D
+  [11] offset +44: 0x10002EF0 = sub_10002EF0
+
+
+=== vtable[4] = sub_10002916 @ 0x10002916 ===
+int sub_10002916()
+{
+  int result; // eax
+
+  result = dword_100126F0;
+  *(_DWORD *)(dword_100126F0 + 52) = 0;
+  return result;
+}
+
+
+
+=== vtable[5] = sub_100042DB @ 0x100042DB ===
+int __thiscall sub_100042DB(_DWORD *this)
+{
+  int result; // eax
+  unsigned int v3; // [esp+4h] [ebp-Ch]
+  int v4; // [esp+8h] [ebp-8h]
+  _DWORD *v5; // [esp+Ch] [ebp-4h]
+  int v6; // [esp+Ch] [ebp-4h]
+  int v7; // [esp+Ch] [ebp-4h]
+
+  v3 = 0;
+  result = unknown_libname_6(this + 18);
+  if ( result )
+  {
+    result = (int)this;
+    this[32] = 0;
+    this[33] = 0;
+    while ( !this[30] )
+    {
+      result = (int)this;
+      if ( v3 > this[31] )
+        break;
+      while ( 1 )
+      {
+        result = sub_10004DD0(this + 18);
+        v5 = (_DWORD *)result;
+        if ( !result )
+          break;
+        (*(void (__thiscall **)(_DWORD *, int))(*this + 8))(this, result);
+        if ( v5[4] || !*v5 )
+        {
+          result = sub_10004E28(v5);
+          break;
+        }
+        sub_10003F44(v5);
+        if ( this[32] )
+          *(_DWORD *)(this[33] + 12) = v5;
+        else
+          this[32] = v5;
+        this[33] = v5;
+        v5[3] = 0;
+      }
+      if ( !this[32] )
+        break;
+      v6 = this[32];
+      v4 = sub_10004024(v6, 0xFFFFFFFF, 0);
+      if ( v4 )
+      {
+        if ( v4 != -536866789 )
+          ++v3;
+        (*(void (__thiscall **)(_DWORD *, int))(*this + 12))(this, v6);
+      }
+      else
+      {
+        v3 = 0;
+      }
+      this[32] = *(_DWORD *)(v6 + 12);
+      (*(void (__thiscall **)(_DWORD *, int))(*this + 4))(this, v6);
+      result = sub_10004E28(v6);
+    }
+    while ( 1 )
+    {
+      v7 = this[32];
+      if ( !v7 )
+        break;
+      sub_10004024(v7, 0xFFFFFFFF, 0);
+      this[32] = *(_DWORD *)(v7 + 12);
+      result = sub_10004E28(v7);
+    }
+  }
+  return result;
+}
+
+
+
+=== vtable[6] = sub_100028ED @ 0x100028ED ===
+int __thiscall sub_100028ED(_DWORD *this)
+{
+  int result; // eax
+
+  result = (int)this;
+  if ( (*(_DWORD *)(this[34] + 4) & 3) != 1 )
+    return sub_10003DB1(this);
+  return result;
+}
+
+
+
+=== vtable[7] = sub_10002EC0 @ 0x10002EC0 ===
+void *__thiscall sub_10002EC0(void *this, char a2)
+{
+  sub_1000299C(this);
+  if ( (a2 & 1) != 0 )
+    sub_10004EE0(this);
+  return this;
+}
+
+
+
+=== StartAddress @ 0x1000283A ===
+DWORD __stdcall StartAddress()
+{
+  DWORD result; // eax
+
+  while ( 1 )
+  {
+    result = (unsigned __int8)byte_10012711;
+    if ( !byte_10012711 )
+      break;
+    sub_10002490();
+    if ( dword_100126F4[0] )
+      sub_10001EC6(dword_100126FC, 691200);
+    if ( dword_100126F8 )
+      sub_10001EC6(dword_100126FC, 691200);
+  }
+  if ( hObject )
+  {
+    result = CloseHandle(hObject);
+    hObject = 0;
+  }
+  return result;
+}
+
+
+
+=== unknown_libname_3 @ 0x10002366 ===
+// Microsoft VisualC 2-14/net runtime
+void __stdcall unknown_libname_3(int a1)
+{
+  ;
+}
+
+
+
+=== sub_1000256B @ 0x1000256B ===
+int __thiscall sub_1000256B(int this, int a2)
+{
+  int result; // eax
+  unsigned int i; // [esp+4h] [ebp-18h]
+  unsigned int Size; // [esp+8h] [ebp-14h]
+  unsigned int *v6; // [esp+Ch] [ebp-10h]
+  int v7; // [esp+10h] [ebp-Ch]
+  _DWORD *v8; // [esp+14h] [ebp-8h]
+  char *Src; // [esp+18h] [ebp-4h]
+  char *Srca; // [esp+18h] [ebp-4h]
+
+  Size = 0;
+  v7 = 0;
+  result = a2;
+  if ( !*(_DWORD *)(a2 + 8) )
+  {
+    result = *(_DWORD *)(*(_DWORD *)(this + 136) + 4) & 3;
+    if ( result == 1 )
+    {
+      v6 = (unsigned int *)unknown_libname_4(a2);
+      v8 = v6 + 4;
+      for ( i = 0; ; ++i )
+      {
+        result = (int)v6;
+        if ( i >= *v6 )
+          break;
+        if ( v8[2] )
+        {
+          *(_DWORD *)(this + 140) = 0;
+          *(_DWORD *)(this + 144) = 0;
+          *(_BYTE *)(this + 156) = 0;
+        }
+        else
+        {
+          result = unknown_libname_4(a2);
+          Src = (char *)result;
+          *(_DWORD *)(this + 148) = (*(_BYTE *)(result + *v8) & 0x80) >> 7;
+          *(_DWORD *)(this + 152) = (*(_BYTE *)(result + *v8) & 0x40) >> 6;
+          dword_1000E050 = *(unsigned __int8 *)(result + *v8 + 3);
+          if ( *(_DWORD *)(this + 148) == 1 )
+          {
+            result = (int)v8;
+            if ( v8[1] )
+            {
+              Size = v8[1] - 8;
+              v7 = *v8 + 8;
+              if ( *(_DWORD *)(this + 140) > 0x54218u && ::Src )
+                memcpy(dword_10012700, ::Src, 0x54600u);
+              *(_DWORD *)(this + 140) = 0;
+              if ( *(_DWORD *)(this + 144) > 0x54218u && dword_1001270C )
+                memcpy(dword_10012704, dword_1001270C, 0x54600u);
+              result = this;
+              *(_DWORD *)(this + 144) = 0;
+              byte_10012710 = 1;
+            }
+          }
+          else if ( v8[1] )
+          {
+            result = v8[1] - 4;
+            Size = result;
+            v7 = *v8 + 4;
+          }
+          if ( Size > 0xC00 )
+            return result;
+          result = this;
+          if ( !*(_DWORD *)(this + 152) )
+          {
+            if ( Size + *(_DWORD *)(this + 140) > 0x54600 )
+              return result;
+            Src += v7;
+            if ( ::Src )
+              memcpy((char *)::Src + *(_DWORD *)(this + 140), Src, Size);
+            *(_DWORD *)(this + 140) += Size;
+          }
+          if ( *(_DWORD *)(this + 152) == 1 )
+          {
+            result = this;
+            if ( Size + *(_DWORD *)(this + 144) > 0x54600 )
+              return result;
+            Srca = &Src[v7];
+            if ( dword_1001270C )
+              memcpy((char *)dword_1001270C + *(_DWORD *)(this + 144), Srca, Size);
+            *(_DWORD *)(this + 144) += Size;
+          }
+        }
+        v8 += 3;
+      }
+    }
+  }
+  return result;
+}
+
+
+
+=== sub_10002916 @ 0x10002916 ===
+int sub_10002916()
+{
+  int result; // eax
+
+  result = dword_100126F0;
+  *(_DWORD *)(dword_100126F0 + 52) = 0;
+  return result;
+}
+
+
+
+=== sub_10002490 @ 0x10002490 ===
+void sub_10002490()
+{
+  char *Src; // [esp+0h] [ebp-14h]
+  int i; // [esp+4h] [ebp-10h]
+  char *v2; // [esp+8h] [ebp-Ch]
+  char *v3; // [esp+8h] [ebp-Ch]
+  char *v4; // [esp+Ch] [ebp-8h]
+  int v5; // [esp+10h] [ebp-4h]
+
+  v5 = 0;
+  while ( !byte_10012710 )
+  {
+    Sleep(1u);
+    if ( ++v5 > 100 )
+      return;
+  }
+  byte_10012710 = 0;
+  if ( dword_100126FC )
+  {
+    v2 = (char *)dword_100126FC;
+    Src = (char *)dword_10012700;
+    v4 = (char *)dword_10012704;
+    for ( i = 240; i; --i )
+    {
+      memcpy(v2, Src, 0x5A0u);
+      v3 = v2 + 1440;
+      Src += 1440;
+      memcpy(v3, v4, 0x5A0u);
+      v2 = v3 + 1440;
+      v4 += 1440;
+    }
+  }
+}
+
+
+
+=== sub_10001EC6 @ 0x10001EC6 ===
+int __thiscall sub_10001EC6(int (__stdcall **this)(int, int), int a2, int a3)
+{
+  return (*this)(a2, a3);
+}
+
+
+
+=== sub_10002E50 @ 0x10002E50 ===
+_DWORD *__thiscall sub_10002E50(_DWORD *this, char a2)
+{
+  sub_1000234A(this);
+  if ( (a2 & 1) != 0 )
+    sub_10004EE0(this);
+  return this;
+}
+
+
+
+=== sub_10003DB1 @ 0x10003DB1 ===
+DWORD __thiscall sub_10003DB1(void *this)
+{
+  return sub_10003AF8((int)this, 0x80942084, 0, 0, 0, 0, 0);
+}
+
+
+
+=== sub_10004E28 @ 0x10004E28 ===
+void __thiscall sub_10004E28(struct _RTL_CRITICAL_SECTION *this, struct _RTL_CRITICAL_SECTION_DEBUG *a2)
+{
+  EnterCriticalSection(this);
+  a2->ProcessLocksList.Blink = (struct _LIST_ENTRY *)this[1].DebugInfo;
+  this[1].DebugInfo = a2;
+  InterlockedIncrement(&this[1].LockCount);
+  LeaveCriticalSection(this);
+}
+
+
+
+=== sub_10002373 @ 0x10002373 ===
+int __thiscall sub_10002373(_DWORD *this, _DWORD *a2)
+{
+  void *v2; // eax
+  int result; // eax
+  unsigned int *v4; // eax
+  size_t v5; // [esp-4h] [ebp-24h]
+  unsigned int v7; // [esp+4h] [ebp-1Ch]
+  int v8; // [esp+8h] [ebp-18h]
+  int v9; // [esp+Ch] [ebp-14h]
+  unsigned int i; // [esp+10h] [ebp-10h]
+  int v11; // [esp+18h] [ebp-8h]
+  _DWORD *v12; // [esp+1Ch] [ebp-4h]
+
+  v5 = unknown_libname_5(a2);
+  v2 = (void *)unknown_libname_4(a2);
+  memset(v2, 0, v5);
+  *a2 = unknown_libname_5(a2);
+  a2[1] = 0;
+  a2[4] = 0;
+  result = *(_DWORD *)(this[34] + 4) & 3;
+  if ( result == 1 )
+  {
+    v8 = *(_DWORD *)(this[34] + 44);
+    v7 = *(_DWORD *)(this[34] + 32);
+    v9 = *(unsigned __int16 *)(this[34] + 12);
+    v4 = (unsigned int *)unknown_libname_4(a2);
+    *v4 = v7;
+    v4[1] = 196608;
+    v4[2] = 0;
+    v4[3] = 0;
+    v12 = v4 + 4;
+    v11 = v8;
+    for ( i = 0; ; ++i )
+    {
+      result = i;
+      if ( i >= v7 )
+        break;
+      *v12 = v11;
+      v12[1] = v9;
+      v12[2] = 0;
+      v12 += 3;
+      v11 += v9;
+    }
+  }
+  return result;
+}
+
+
+
+=== sub_100037F1 @ 0x100037F1 ===
+DWORD __thiscall sub_100037F1(void *this, void *lpOutBuffer)
+{
+  memset(lpOutBuffer, 0, 0x308u);
+  return sub_10003AF8((int)this, 0x80942050, 0, 0, lpOutBuffer, 0x308u, 0);
+}
+
+
+
+=== sub_10003CFB @ 0x10003CFB ===
+DWORD __thiscall sub_10003CFB(_DWORD *this, int a2, char a3, int a4, int a5)
+{
+  char InBuffer[4]; // [esp+4h] [ebp-8h] BYREF
+  int v8; // [esp+8h] [ebp-4h]
+
+  if ( !sub_10001E80(this) )
+  {
+    v8 = sub_10003071(this, a2, a4, a5);
+    if ( v8 )
+      return v8;
+  }
+  InBuffer[0] = a3;
+  return sub_10003AF8((int)this, 0x80942078, InBuffer, 1u, 0, 0, 0);
+}
+
+
+
+=== sub_10002CFE @ 0x10002CFE ===
+int __thiscall sub_10002CFE(_DWORD *this, int a2, int a3)
+{
+  int v3; // edx
+  _DWORD *v4; // edx
+  int result; // eax
+  unsigned int i; // [esp+8h] [ebp-310h]
+  _BYTE OutBuffer[4]; // [esp+Ch] [ebp-30Ch] BYREF
+  unsigned int v9; // [esp+10h] [ebp-308h]
+  _BYTE v10[512]; // [esp+114h] [ebp-204h] BYREF
+  int v11; // [esp+314h] [ebp-4h]
+
+  v11 = (unsigned __int8)sub_10003CFB(a2, a3, dword_100126EC, &unk_1000E058);
+  if ( v11 )
+    return v11;
+  v11 = sub_100037F1(OutBuffer);
+  if ( v11 )
+  {
+    sub_10003D6D(this[12], this);
+    return v11;
+  }
+  for ( i = 0; i < v9; ++i )
+  {
+    v3 = 16 * i;
+    if ( (unsigned __int8)v10[16 * i + 10] == a3 )
+    {
+      v4 = &v10[16 * i];
+      this[1] = *v4;
+      this[2] = v4[1];
+      this[3] = v4[2];
+      v3 = v4[3];
+      this[4] = v3;
+      break;
+    }
+  }
+  switch ( this[1] )
+  {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+      sub_10002BEC(this);
+      return v11;
+    default:
+      sub_10003D6D(this[12], v3);
+      result = -536866816;
+      break;
+  }
+  return result;
+}
+
+
+
+=== sub_10003484 @ 0x10003484 ===
+BOOL sub_10003484()
+{
+  _DWORD OutBuffer[4]; // [esp+4h] [ebp-14h] BYREF
+
+  memset(OutBuffer, 0, sizeof(OutBuffer));
+  return !sub_100034C8(OutBuffer) && (OutBuffer[0] & 0x100000) != 0;
+}
+
+
+
+=== sub_10001E80 @ 0x10001E80 ===
+BOOL __thiscall sub_10001E80(_DWORD *this)
+{
+  return this[1] != 0;
+}
+
+
+
+=== sub_10003D8F @ 0x10003D8F ===
+DWORD __thiscall sub_10003D8F(void *this)
+{
+  return sub_10003AF8((int)this, 0x80942080, 0, 0, 0, 0, 0);
+}
+
+
+
+=== sub_10001631 @ 0x10001631 ===
+int __thiscall sub_10001631(void *this, int a2)
+{
+  if ( sub_10001E80(&unk_10012650, this) )
+    return 1;
+  if ( sub_10003071(a2, dword_100126EC, &unk_1000E058) )
+    return 1;
+  dword_1000E068 = a2;
+  return 0;
+}
